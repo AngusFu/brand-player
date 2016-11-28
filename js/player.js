@@ -13,6 +13,7 @@ var SimpleEventEmitter = require('./emitter');
 var EMITTER  = new SimpleEventEmitter();
 
 //*******************************************************************************
+var debugInfo = {};
 /**
  * @constructor 
  * 
@@ -34,6 +35,7 @@ function SwfPlayer(selector, options) {
     this.options = options;
 
     this.vid = this.getVID();
+    debugInfo[this.vid] = this;
     this.readyCalls = [ require('./ready') ];
 
     var $container = $(selector);
@@ -63,7 +65,6 @@ SwfPlayer.prototype = {
      */
     on: function(eventName, fn) {
         var events = eventName.split(/\s+/);
-
         for (var i = 0, len = events.length; i < len; i++) {
             EMITTER.on.call(EMITTER, events[i] + '_' + this.vid, fn);
         }
@@ -212,7 +213,10 @@ SwfPlayer.prototype = {
 
     replay: function () {
         this.seekTo(0);
-        this.play();
+        
+        if (this.prop('paused')) {
+            this.play();
+        }
     },
 
     prop: function(name, value) {
@@ -358,7 +362,9 @@ var videoPlayProto = {
 
     replay: function () {
         this.seekTo(0);
-        this.play();
+        if (this.prop('paused')) {
+            this.play();
+        }
     },
 
     prop: function(name, value) {
@@ -509,4 +515,11 @@ vPlayer.onError = function (vid, eventName) {
  */
 vPlayer.onReady = function (vid) {
     EMITTER.fire('ready_' + vid);
+};
+
+/**
+ * debug in console
+ */
+vPlayer.debug = function (vid) {
+    return vid ? debugInfo[vid] : debugInfo;
 };
