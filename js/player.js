@@ -487,7 +487,7 @@ $.fn.vPlayer = function () {
 
         var swfUrl = $.trim($el.attr('swf'));
         if (swfUrl) {
-            config['playTrack'] = swfUrl;
+            config['swfUrl'] = swfUrl;
         }
 
         $.vPlayer($el, config);
@@ -523,3 +523,5 @@ vPlayer.onReady = function (vid) {
 vPlayer.debug = function (vid) {
     return vid ? debugInfo[vid] : debugInfo;
 };
+
+vPlayer.debug.events = EMITTER;
