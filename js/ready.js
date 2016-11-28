@@ -586,7 +586,7 @@ module.exports = function ready(player, elem) {
         // ended 在前 
         // H5 模式下 ended 时也会 paused
         if (player.prop('ended')) {
-            return player.replay(), player.play();
+            return player.replay();//, player.play();
         }
         
         if (player.prop("paused")) {
