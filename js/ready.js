@@ -179,11 +179,13 @@ module.exports = function ready(player, elem) {
         },
         onchange: function (percent) {
             var dura = player.prop('duration');
-            percent < 1 && player.seekTo(percent * dura);
+            percent = percent < .95 ? percent : .95;
+            player.seekTo(percent * dura);
             $progressTime.text(format(dura * percent) + '/' + format(dura));
         },
         onend: function (percent) {
             IS_SLIDING = false;
+            percent = percent < .95 ? percent : .95;
             player.seekTo(percent * player.prop('duration'));
             player.play();
         }
@@ -315,11 +317,12 @@ module.exports = function ready(player, elem) {
     });
 
     // 播放打点
-    player.on('play',function () {
-        var track = player.playTrack;
+    var track = player.playTrack;
+    player.on('play', function () {
         if (track) {
             try {
-                (new Function(track))();
+                var fn = new Function(track);
+                fn();
             } catch (e) {}
         }
     });
@@ -586,7 +589,7 @@ module.exports = function ready(player, elem) {
         // ended 在前 
         // H5 模式下 ended 时也会 paused
         if (player.prop('ended')) {
-            return player.replay();//, player.play();
+            return player.replay();
         }
         
         if (player.prop("paused")) {

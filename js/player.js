@@ -213,10 +213,15 @@ SwfPlayer.prototype = {
 
     replay: function () {
         this.seekTo(0);
-        
-        if (this.prop('paused')) {
-            this.play();
+        var self = this;
+        if (self.prop('paused')) {
+            self.play();
         }
+        setTimeout(function () {
+            if (self.prop('paused')) {
+                self.play();
+            }
+        }, 0);
     },
 
     prop: function(name, value) {
@@ -361,10 +366,19 @@ var videoPlayProto = {
     },
 
     replay: function () {
-        this.seekTo(0);
-        if (this.prop('paused')) {
-            this.play();
-        }
+        // this.seekTo(0);
+        // if (this.prop('paused')) {
+        //     this.play();
+        // }
+        this.vidElem.currentTime = 0;
+        this.vidElem.play();
+        
+        var self = this;
+        setTimeout(function () {
+            if (self.prop('paused')) {
+                self.play();
+            }
+        }, 0);
     },
 
     prop: function(name, value) {
