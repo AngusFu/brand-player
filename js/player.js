@@ -140,6 +140,7 @@ SwfPlayer.prototype = {
          * 绑定事件
          */
         var cxt = this;
+        
         this.on('ready', function() {
             cxt.readyState = 'complete';
             cxt.vidElem = document.getElementById(cxt.vid);
@@ -165,6 +166,17 @@ SwfPlayer.prototype = {
             cxt.__not_first = true;
             EMITTER.fire('track_' + cxt.vid); 
         });
+
+        // 播放打点
+        var track = this.playTrack;
+        if (track) {
+            this.on('track', function () {
+                try {
+                    var fn = new Function(track);
+                    fn();
+                } catch (e) {}
+            });
+        }
     },
 
     /**
@@ -317,6 +329,17 @@ var videoPlayProto = {
             cxt.__not_first = true;
             EMITTER.fire('track_' + cxt.vid); 
         });
+
+        // 播放打点
+        var track = this.playTrack;
+        if (track) {
+            this.on('track', function () {
+                try {
+                    var fn = new Function(track);
+                    fn();
+                } catch (e) {}
+            });
+        }
 
         var vid = this.vid;
         var elem = document.getElementById(vid);

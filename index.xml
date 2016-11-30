@@ -47,7 +47,7 @@
 
     <script>
     var isHTTPS = /^https\:\/\//.test(location.href);
-    var vplayer = isHTTPS ? "https://s3.ssl.qhres.com/static/262e4ce47ae146cc.js" : 'http://s7.qhres.com/static/262e4ce47ae146cc.js';
+    var vplayer = isHTTPS ? "https://s3.ssl.qhres.com/static/d057db0d507ddb59.js" : 'http://s7.qhres.com/static/d057db0d507ddb59.js';
     _loader.add('vplayer', /localhost/.test(location.href) ? './dist/bundle.js' : vplayer);
 
     _loader.use('jquery', function() {_loader.use('vplayer', function() {

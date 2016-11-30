@@ -317,17 +317,6 @@ module.exports = function ready(player, elem) {
         openUrl();
     });
 
-    // 播放打点
-    var track = player.playTrack;
-    if (track) {
-        player.on('track', function () {
-            try {
-                var fn = new Function(track);
-                fn();
-            } catch (e) {}
-        });
-    }
-
     //-----------------------------------------------------------------------
     // 音量切换
     var $volumeFull = _$('.volume-total');
