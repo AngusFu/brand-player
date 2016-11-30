@@ -157,6 +157,13 @@ SwfPlayer.prototype = {
                     cxt.replay();
                 }, 100);
             }
+        }).on('playing', function () {
+            // 用于首次播放时的打点
+            if (cxt.__not_first) {
+                return;
+            }
+            cxt.__not_first = true;
+            EMITTER.fire('track_' + cxt.vid); 
         });
     },
 
@@ -221,6 +228,9 @@ SwfPlayer.prototype = {
             if (self.prop('paused')) {
                 self.play();
             }
+
+            // 重新播放的时候，用于打点
+            EMITTER.fire('track_' + self.vid);
         }, 0);
     },
 
@@ -268,11 +278,11 @@ var videoPlayProto = {
             name: this.vid,
             src: this.options.preload ? this.options.src : '',
             preload: this.options.preload,
-            loop: this.options.loop,
+            // loop 不应直接添加给 video 元素
+            // 否则 IE 11 下面监听不到事件
+            // loop: this.options.loop,
             autoplay: this.options.autoplay,
             muted: this.options.muted
-            // 在这里设置 volume 无效
-            // volume: this.options.volume
         });
         $elem.css({
             width: '100%',
@@ -299,6 +309,13 @@ var videoPlayProto = {
                     cxt.replay();
                 }, 100);
             }
+        }).on('playing', function () {
+            // 用于首次播放时的打点
+            if (cxt.__not_first) {
+                return;
+            }
+            cxt.__not_first = true;
+            EMITTER.fire('track_' + cxt.vid); 
         });
 
         var vid = this.vid;
@@ -378,6 +395,9 @@ var videoPlayProto = {
             if (self.prop('paused')) {
                 self.play();
             }
+
+            // 重新播放的时候，用于打点
+            EMITTER.fire('track_' + self.vid);
         }, 0);
     },
 

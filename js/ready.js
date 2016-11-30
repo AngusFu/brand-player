@@ -262,6 +262,7 @@ module.exports = function ready(player, elem) {
     });
 
     player.on('pause', function() {
+        console.log('pause')
         clearInterval(timer);
         updateProgressUI();
         showControlPane();
@@ -318,14 +319,14 @@ module.exports = function ready(player, elem) {
 
     // 播放打点
     var track = player.playTrack;
-    player.on('playing', function () {
-        if (track) {
+    if (track) {
+        player.on('track', function () {
             try {
                 var fn = new Function(track);
                 fn();
             } catch (e) {}
-        }
-    });
+        });
+    }
 
     //-----------------------------------------------------------------------
     // 音量切换
