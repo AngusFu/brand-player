@@ -318,7 +318,7 @@ module.exports = function ready(player, elem) {
 
     // 播放打点
     var track = player.playTrack;
-    player.on('play', function () {
+    player.on('playing', function () {
         if (track) {
             try {
                 var fn = new Function(track);

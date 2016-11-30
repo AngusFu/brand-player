@@ -47,16 +47,16 @@
 
     <script>
     var isHTTPS = /^https\:\/\//.test(location.href);
-    var vplayer = isHTTPS ? "https://s3.ssl.qhres.com/!2ed84158/brandPlayer-1.1.2.js" : 'http://s7.qhres.com/!2ed84158/brandPlayer-1.1.2.js';
+    var vplayer = isHTTPS ? "https://s3.ssl.qhres.com/static/f6df4dc0611ebf20.js" : 'http://s7.qhres.com/static/f6df4dc0611ebf20.js';
     _loader.add('vplayer', /localhost/.test(location.href) ? './dist/bundle.js' : vplayer);
 
     _loader.use('jquery', function() {_loader.use('vplayer', function() {
         var vplayer = $.vPlayer(".vplayer-container", {
-            mode: 'swf',
+            // mode: 'swf',
             swfUrl: './assets/player.swf',
             clickUrl: "http://baidu.com",
-            clickUrlTrack: "",
-            playTrack: "",
+            clickUrlTrack: "alert(222)",
+            playTrack: "console.log(22233333333333)",
             poster: isHTTPS ? "https://p4.ssl.qhimg.com/t01a035f4e6470c150c.png" : "http://p0.qhimg.com/t01a035f4e6470c150c.png",
             src: isHTTPS ? "https://ss0.bdstatic.com/-0U0bnSm1A5BphGlnYG/cae-legoup-video-target/a63df6d8-0bd0-4493-99aa-a0e221f5307d.mp4" : "http://s7.qhres.com/static/5381f58c2f241dce.mp4",
             loop: false,
