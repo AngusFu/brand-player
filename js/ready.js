@@ -262,7 +262,6 @@ module.exports = function ready(player, elem) {
     });
 
     player.on('pause', function() {
-        console.log('pause')
         clearInterval(timer);
         updateProgressUI();
         showControlPane();

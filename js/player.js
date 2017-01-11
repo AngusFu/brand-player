@@ -1,4 +1,4 @@
-var RESOURCE = require('../config')[/^https\:\/\//.test(location.href) ? 'https' : 'http'];
+var RESOURCE = require('../config')//[/^https\:\/\//.test(location.href) ? 'https' : 'http'];
 
 var loadCSS = require('./loadCSS');
 var cssText = require('../css/styles.css');
@@ -184,7 +184,7 @@ SwfPlayer.prototype = {
      */
     ready: function(readyFunc) {
         if (this.readyState === 'complete') {
-            readyFunc.call(this, this, this.vidElem);
+            readyFunc.call(this, this, this.vidElem, this.$wrap);
         } else {
             this.readyCalls.push(readyFunc);
         }
