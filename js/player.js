@@ -580,5 +580,16 @@ vPlayer.onReady = function (vid) {
 vPlayer.debug = function (vid) {
     return vid ? debugInfo[vid] : debugInfo;
 };
-
 vPlayer.debug.events = EMITTER;
+
+/**
+ * log events 
+ */
+EMITTER._fire = EMITTER.fire;
+EMITTER.fire = function (eventName) {
+    vPlayer.debugMode && window.console && console.log(eventName);
+    EMITTER._fire(eventName);
+};
+vPlayer.toggleEventConsole = function () {
+    vPlayer.debugMode = !vPlayer.debugMode;
+};
