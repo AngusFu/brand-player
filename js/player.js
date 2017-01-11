@@ -72,10 +72,13 @@ SwfPlayer.prototype = {
     },
 
     off: function(eventName, fn) {
-        var events = eventName.split(/\s+/);
-
-        for (var i = 0, len = events.length; i < len; i++) {
-            EMITTER.off.call(EMITTER, events[i] + '_' + this.vid, fn);
+        if (!eventName) {
+            EMITTER.off();
+        } else {
+            var events = eventName.split(/\s+/);
+            for (var i = 0, len = events.length; i < len; i++) {
+                EMITTER.off.call(EMITTER, events[i] + '_' + this.vid, fn);
+            }
         }
         return this;
     },
