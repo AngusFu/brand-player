@@ -2,10 +2,8 @@
 <html>
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    <meta http-equiv="Content-Style-Type" content="text/css" />
-    <meta http-equiv="imagetoolbar" content="no" />
-    <title>VideoJS Workbench</title>
+    <meta charset="utf-8">
+    <title>Brand Player</title>
     <style>
     .clearfix:before, 
     .clearfix:after { 
@@ -52,10 +50,9 @@
         loop
         muted
     ></div>-->
-    <script src="//s0.ssl.qhres.com/static/9cb818b37edae8f6.js"></script>
+    <script src="//lib.baomitu.com/jquery/1.7.2/jquery.min.js"></script>
+    <script src="./dist/bundle.js"></script>
     <script>
-    _loader.add('vplayer', './dist/bundle.js?v=' + (+new Date()));
-    _loader.use('jquery', function() {_loader.use('vplayer', function() {
         var vplayer = $.vPlayer("#p1", {
             clickUrl: "//baidu.com",
             clickUrlTrack: function () {
@@ -63,7 +60,7 @@
             },
             playTrack: "",
             poster: "//p4.ssl.qhimg.com/t01a035f4e6470c150c.png",
-            src: "//s7.ssl.qhres.com/static/5381f58c2f241dce.mp4",
+            src: "//s5.ssl.qhres.com/static/5381f58c2f241dce.mp4",
             loop: false,
             preload: false,
             autoplay: false,
@@ -71,7 +68,6 @@
         });
         
         // $('#p2').vPlayer();
-    });});
     </script>
 </body>
 </html>

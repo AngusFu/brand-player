@@ -38,7 +38,7 @@ let es3FixRollupPlugin = {
     // foo.default -> foo["default"]
     'default_3': [/\.default([\.\s]*)/g, '["__def"]$1']
   },
-  
+
   transformBundle: function (code) {
     let rmHash = this.removeHash;
     for (var k in rmHash) {
@@ -58,7 +58,8 @@ let browserSyncRolluPlugin = {
     let bs = this.client;
     bs.init({
       server: './',
-      open: 'local'
+      open: 'local',
+      https: true
     });
     bs.watch('*.html').on('change', bs.reload);
     
