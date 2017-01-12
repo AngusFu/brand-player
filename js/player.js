@@ -301,8 +301,7 @@ var videoPlayProto = {
     createPlayer: function() {
         this.mode = 'video';
         this.$wrap.css('background-color', this.options.bgcolor);
-
-        this.$wrap.find(this.vid).remove();
+        this.$wrap.find('#' + this.vid).remove();
         
         var $elem = $('<video />');
         this.vidElem = $elem[0];
