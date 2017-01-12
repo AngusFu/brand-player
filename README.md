@@ -1,28 +1,44 @@
 # Brand Player
 
-## Note
+## Features
 
-- 兼容到 IE7
-- 修改源码时尽量使用 ES3
-- 注意避免 default、catch 等关键字
-- 源码千尽量不要依赖外部模块
-- 目前只支持在 MP4 的情况下使用 HTML5 播放器 
+- IE7 Compitable
+- MP4 Oriented
+- Full Control over Video Element 
+- Simple API: HTML5-like
+
+## Notes
+
+There are some rules you should follow when customizing.
+
+- Use ES3
+- Avoid keywords, e.g. `default``catch`
+- Take care when importing third-party packages
+ 
 
 ## Usage
 
 ```javascript
 var vplayer = $.vPlayer("#container", {
-    clickUrl: "http://baidu.com",
-    // 点击跳转打点
+    // force FLASH mode
+    // mode: 'swf',
+
+    // click on the stage will open a new window
+    clickUrl: "//baidu.com",
+    // click stage
     clickUrlTrack: function () {
         alert(222)
     },
-    // 每次从头播放时打点
+
+    // every time the video replays from the begining
     playTrack: "console.log('start palying')",
-    // 海报
+    
+    // poster source
     poster: "//p4.ssl.qhimg.com/t01a035f4e6470c150c.png",
-    // 视频源
-    src: "//s7.qhres.com/static/5381f58c2f241dce.mp4",
+
+    // video source
+    src: "//s4.ssl.qhres.com/static/5381f58c2f241dce.mp4",
+
     loop: false,
     preload: false,
     autoplay: false,
@@ -42,19 +58,40 @@ vplayer.ready(function (
   playerInstance.off('click');
   // 2. bind events
   // stage click
-  playerInstance.on('click', fn);
+  playerInstance.on('click', fnClick);
   // pause
-  playerInstance.on('pause', fn);
+  playerInstance.on('pause', fnPause);
   // start to play
-  playerInstance.on('playing', fn);
+  playerInstance.on('playing', fnPlaying);
   // ended
-  playerInstance.on('ended', fn);
+  playerInstance.on('ended', fnEnded);
   // ...
+
+
+  // GET properties
+  // Note: property names are like that of HTML5-video
+  playerInstance.prop('duration');
+  playerInstance.prop('muted');
+  // ...
+  
+  // SET properties
+  playerInstance.prop('volume', 0.5);
+  playerInstance.prop('muted', true);
+  // ...
+
+  // control functions
+  // ...
+  playerInstance.play();
+  playerInstance.pause();
 });
 
 // every time one event called
 // the event name will be shown in console
 window.vPlayer.toggleEventLog();
+
+// this will return a playerInstance
+// while `vjs_1484186882609` is id of video element
+window.vPlayer.debug('vjs_1484186882609');
 
 ```
 

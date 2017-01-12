@@ -302,6 +302,8 @@ var videoPlayProto = {
         this.mode = 'video';
         this.$wrap.css('background-color', this.options.bgcolor);
 
+        this.$wrap.find(this.vid).remove();
+        
         var $elem = $('<video />');
         this.vidElem = $elem[0];
 
@@ -317,6 +319,7 @@ var videoPlayProto = {
             autoplay: this.options.autoplay,
             muted: this.options.muted
         });
+        
         $elem.css({
             width: '100%',
             height: '100%'

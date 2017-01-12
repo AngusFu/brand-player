@@ -6,8 +6,7 @@
   "scripts": {
     "start": "rollup -c ./rollup.config.js -w",
     "build": "rollup -c ./rollup.config.js",
-    "lint": "jshint .",
-    "validate": "npm ls"
+    "lint": "jshint ."
   },
   "keywords": [
     "player"
@@ -38,8 +37,7 @@
     "uglify-js": "^2.7.5"
   },
   "pre-commit": [
-    "lint",
-    "build"
+    "lint"
   ],
   "dependencies": {
     "browser-sync": "^2.18.6"
