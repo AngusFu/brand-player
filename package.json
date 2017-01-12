@@ -13,6 +13,14 @@
   ],
   "author": "angusfu1126@qq.com",
   "license": "MIT",
+  "homepage": "https://github.com/AngusFu/brand-player",
+  "bugs": {
+    "url": "https://github.com/AngusFu/brand-player/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AngusFu/brand-player"
+  },
   "devDependencies": {
     "node-sass": "^4.2.0",
     "npm-run-all": "^3.1.1",
