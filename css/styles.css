@@ -42,10 +42,6 @@
     _background-position: 0 -195px;
 }
 
-.video-control > div {
-    /*margin-top: 10px;*/
-}
-
 .video-control > .video-progress {
     position: absolute;
     left: 0;
@@ -222,4 +218,3 @@
     opacity: .8;
     filter: alpha(opacity=80);
 }
-

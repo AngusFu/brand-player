@@ -4,7 +4,8 @@
 */
 
 /* global ActiveXObject: false */
-
+/* jshint undef: true, unused: false */
+/*jshint -W018 */
 var swfobject = function() {
 
     var UNDEF = "undefined",

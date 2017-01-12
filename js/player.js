@@ -1,16 +1,13 @@
-var RESOURCE = require('../config')//[/^https\:\/\//.test(location.href) ? 'https' : 'http'];
-
+var RESOURCE = require('../config');
 var loadCSS = require('./loadCSS');
 var cssText = require('../css/styles.css');
-
-loadCSS(
-    cssText.replace(/__sprite/g, RESOURCE['sprite'])
-);
+loadCSS(cssText.replace(/__sprite/g, RESOURCE.sprite));
 
 var $template = $(require('../html/player.html'));
 var swfobject = require('./swfobject');
-var SimpleEventEmitter = require('./emitter');
-var EMITTER  = new SimpleEventEmitter();
+var EMITTER = $({});
+
+var rDOMEvents = /^on(blur|focus|focusin|focusout|load|resize|scroll|unload|click|dblclick|mousedown|mouseup|mousemove|mouseover|mouseout|mouseenter|mouseleave|change|select|submit|keydown|keypress|keyup|error|contextmenu)\=/i;
 
 //*******************************************************************************
 var debugInfo = {};
@@ -22,8 +19,8 @@ var debugInfo = {};
  */
 function SwfPlayer(selector, options) {
     options = $.extend({}, {
-        swfUrl: RESOURCE['swf'],
-        loading: RESOURCE['loading'],
+        swfUrl: RESOURCE.swf,
+        loading: RESOURCE.loading,
         bgcolor: '#000',
         preload: false,
         loop: false,
@@ -45,18 +42,20 @@ function SwfPlayer(selector, options) {
     this.$wrap.prepend('<div id="' + this.vid + '"></div>');
 
     this.clickUrl = $.trim(options.clickUrl || '');
-    this.clickUrlTrack = $.trim(options.clickUrlTrack);
-    this.playTrack = $.trim(options.playTrack);
+    var clickTrack = options.clickUrlTrack || '';
+    var playTrack  = options.playTrack || '';
+    this.clickUrlTrack = $.isFunction(clickTrack) ? clickTrack : $.trim(clickTrack).replace(rDOMEvents, '');
+    this.playTrack = $.isFunction(playTrack) ? playTrack : $.trim(playTrack).replace(rDOMEvents, '');
 
+    // poster
     if (options.poster) {
-        this.$wrap.find('.vplayer-poster img').attr('src', options.poster)
+        this.$wrap.find('.vplayer-poster img').attr('src', options.poster);
     }
 
     // 添加 loading 动画
     this.$wrap.find('.vplayer-loading').attr('src', options.loading);
-    
     this.createPlayer();
-};
+}
 
 SwfPlayer.prototype = {
     constructor: SwfPlayer,
@@ -87,7 +86,7 @@ SwfPlayer.prototype = {
      * 生成 guid 
      */
     getVID: function() {
-        return 'vjs_' + (+new Date())
+        return 'vjs_' + (+new Date());
     },
 
     /**
@@ -109,7 +108,7 @@ SwfPlayer.prototype = {
         };
 
         var params = {
-            allowScriptAccess: "always",
+            allowScriptAccess: 'always',
             bgcolor: this.options.bgcolor,
             allowFullScreen: true,
             wmode: 'transparent'
@@ -123,16 +122,42 @@ SwfPlayer.prototype = {
         swfobject.embedSWF(
             this.options.swfUrl,
             this.vid,
-            "100%",
-            "100%",
-            "10.3",
-            "",
+            '100%',
+            '100%',
+            '10.3',
+            '',
             flashvars,
             params,
             attributes
         );
 
         this.initEvents();
+    },
+
+    track: function (track) {
+        try {
+            if ($.isFunction(track)) {
+                track();
+            } else {
+                var fn = new Function(track);
+                fn();
+            }
+        } catch (e) {
+            if (window.console) {
+                window.console.log(e);
+            }
+        }
+    },
+
+    applyPlayTrack: function() {
+        // 播放打点
+        var track = this.playTrack;
+        var self = this;
+        if (track) {
+            this.on('track', function () {
+                self.track(track);
+            });
+        }
     },
 
     /**
@@ -154,7 +179,7 @@ SwfPlayer.prototype = {
                 readyCalls[i].call(cxt, cxt, cxt.vidElem);
             }
         }).on('stageclick', function() {
-            EMITTER.fire('click_' + cxt.vid);
+            EMITTER.trigger('click_' + cxt.vid);
         }).on('ended', function () {
             if (cxt.options.loop) {
                 setTimeout(function () {
@@ -167,19 +192,10 @@ SwfPlayer.prototype = {
                 return;
             }
             cxt.__not_first = true;
-            EMITTER.fire('track_' + cxt.vid); 
+            EMITTER.trigger('track_' + cxt.vid); 
         });
 
-        // 播放打点
-        var track = this.playTrack;
-        if (track) {
-            this.on('track', function () {
-                try {
-                    var fn = new Function(track);
-                    fn();
-                } catch (e) {}
-            });
-        }
+        this.applyPlayTrack();
     },
 
     /**
@@ -229,7 +245,7 @@ SwfPlayer.prototype = {
      * @param  {Number} seconds 视频跳到指定秒数
      */
     seekTo: function(seconds) {
-        this.prop("currentTime", seconds);
+        this.prop('currentTime', seconds);
         return this;
     },
 
@@ -245,7 +261,7 @@ SwfPlayer.prototype = {
             }
 
             // 重新播放的时候，用于打点
-            EMITTER.fire('track_' + self.vid);
+            EMITTER.trigger('track_' + self.vid);
         }, 0);
     },
 
@@ -270,9 +286,11 @@ function VideoPlayer() {
 var videoPlayProto = {
     constructor: VideoPlayer,
     addAttrs: function(obj) {
-        for (var key in obj) if (obj.hasOwnProperty(key)) {
-            if (obj[key]) {
-                this.vidElem[key] = obj[key];
+        for (var key in obj){
+            if (obj.hasOwnProperty(key)) {
+                if (obj[key]) {
+                    this.vidElem[key] = obj[key];
+                }
             }
         }
     },
@@ -304,7 +322,7 @@ var videoPlayProto = {
             height: '100%'
         });
         this.$wrap.prepend($elem);
-        this.vidElem['volume'] = this.options.volume;
+        this.vidElem.volume = this.options.volume;
         this._lastVolume = this.options.volume;
 
         this.initEvents();
@@ -330,26 +348,17 @@ var videoPlayProto = {
                 return;
             }
             cxt.__not_first = true;
-            EMITTER.fire('track_' + cxt.vid); 
+            EMITTER.trigger('track_' + cxt.vid); 
         });
 
-        // 播放打点
-        var track = this.playTrack;
-        if (track) {
-            this.on('track', function () {
-                try {
-                    var fn = new Function(track);
-                    fn();
-                } catch (e) {}
-            });
-        }
+        this.applyPlayTrack();
 
         var vid = this.vid;
         var elem = document.getElementById(vid);
         var events = [ 'canplaythrough', 'durationchange', 'playing', 'play', 'loadstart', 'pause', 'ended', 'volumechange', 'click' ];
         $.each(events, function (i, name) {
             $(elem).on(name, function (){
-                EMITTER.fire(name + '_' + vid);
+                EMITTER.trigger(name + '_' + vid);
             });
         });
 
@@ -377,7 +386,7 @@ var videoPlayProto = {
     play: function() {
         // 不预加载的情况
         if (!this.options.preload && !this.prop('currentSrc')) {
-            this.vidElem['src'] = this.options.src;
+            this.vidElem.src = this.options.src;
         }
         // 防止出现问题
         // TODO: loop 时如何判定
@@ -423,7 +432,7 @@ var videoPlayProto = {
             }
 
             // 重新播放的时候，用于打点
-            EMITTER.fire('track_' + self.vid);
+            EMITTER.trigger('track_' + self.vid);
         }, 0);
     },
 
@@ -444,7 +453,7 @@ var videoPlayProto = {
         // }
 
         if (name === 'volume') {
-            this._lastVolume = elem['volume'];
+            this._lastVolume = elem.volume;
         }
 
         return this;
@@ -463,8 +472,11 @@ var supportsMP4 = (function () {
     return !!res;
 }());
 
-$.vPlayer = window.vPlayer = function (selector, options) {
-    if (!options || !options.src) throw 'option src needed!';
+var vPlayer = function (selector, options) {
+    if (!options || !options.src) {
+        throw 'option src needed!';
+    }
+
     var player;
     // 指定为 swf
     var forceSwf = options.mode === 'swf';
@@ -486,6 +498,8 @@ $.vPlayer = window.vPlayer = function (selector, options) {
     return player;
 };
 
+module.exports = $.vPlayer = vPlayer;
+
 /**
  * 引入 jQuery 插件模式
  */
@@ -493,12 +507,12 @@ $.fn.vPlayer = function () {
     this.each(function (i, el) {
         var $el = $(el);
         var config = {};
-        config['mode'] = $el.attr('mode'); 
-        config['src']  = $el.attr('src'); 
+        config.mode = $el.attr('mode'); 
+        config.src  = $el.attr('src'); 
         
         var loop = $el.attr('loop');
         if (loop !== void 0) {
-            config['loop'] = true;
+            config.loop = true;
         }
 
         // preload="auto" 需要与 autoplay="true" 一起使用 否则会出问题
@@ -507,50 +521,50 @@ $.fn.vPlayer = function () {
         // 2016-11-21
         var preload = $el.attr('preload');
         if (preload !== void 0) {
-            config['preload'] = true;
+            config.preload = true;
         }
 
         var autoplay = $el.attr('autoplay');
         if (autoplay !== void 0) {
-            config['autoplay'] = true;
+            config.autoplay = true;
         }
 
         var muted = $el.attr('muted');
         if (muted !== void 0) {
-            config['muted'] = true;
+            config.muted = true;
         }
 
         var volume = $el.attr('volume');
         if (volume !== void 0) {
-            config['volume'] = parseFloat(volume);
+            config.volume = parseFloat(volume);
         }
 
         var poster = $el.attr('poster');
         if (poster) {
-            config['poster'] = poster;
+            config.poster = poster;
         }
 
         var href = $.trim($el.attr('href'));
         if (href) {
-            config['clickUrl'] = href;
+            config.clickUrl = href;
         }
 
         var onHrefOpen = $.trim($el.attr('onurlopen'));
         if (onHrefOpen) {
-            config['clickUrlTrack'] = onHrefOpen;
+            config.clickUrlTrack = onHrefOpen;
         }
 
         var onPlay = $.trim($el.attr('onplay'));
         if (onPlay) {
-            config['playTrack'] = onPlay;
+            config.playTrack = onPlay;
         }
 
         var swfUrl = $.trim($el.attr('swf'));
         if (swfUrl) {
-            config['swfUrl'] = swfUrl;
+            config.swfUrl = swfUrl;
         }
 
-        $.vPlayer($el, config);
+        return $.vPlayer($el, config);
     });
 
     return this;
@@ -560,21 +574,21 @@ $.fn.vPlayer = function () {
  * 事件回调
  */
 vPlayer.onEvent = function (vid, eventName) {
-    EMITTER.fire(eventName + '_' + vid);
+    EMITTER.trigger(eventName + '_' + vid);
 };
 
 /**
  * 发生错误
  */
 vPlayer.onError = function (vid, eventName) {
-    EMITTER.fire('error_' + vid, eventName);
+    EMITTER.trigger('error_' + vid, eventName);
 };
 
 /**
  * flash ready
  */
 vPlayer.onReady = function (vid) {
-    EMITTER.fire('ready_' + vid);
+    EMITTER.trigger('ready_' + vid);
 };
 
 /**
@@ -583,16 +597,19 @@ vPlayer.onReady = function (vid) {
 vPlayer.debug = function (vid) {
     return vid ? debugInfo[vid] : debugInfo;
 };
-vPlayer.debug.events = EMITTER;
+vPlayer.debug.emitter = EMITTER;
 
 /**
  * log events 
  */
-EMITTER._fire = EMITTER.fire;
-EMITTER.fire = function (eventName) {
-    vPlayer.debugMode && window.console && console.log(eventName);
-    EMITTER._fire(eventName);
+EMITTER._trigger = EMITTER.trigger;
+EMITTER.trigger = function (eventName) {
+    if (vPlayer.debugMode && window.console) {
+        console.log(eventName);
+    }
+
+    EMITTER._trigger(eventName);
 };
-vPlayer.toggleEventConsole = function () {
+vPlayer.toggleEventLog = function () {
     vPlayer.debugMode = !vPlayer.debugMode;
 };

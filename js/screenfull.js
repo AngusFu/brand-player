@@ -111,26 +111,28 @@
         return;
     }
 
-    Object.defineProperties && Object.defineProperties(screenfull, {
-        isFullscreen: {
-            get: function () {
-                return Boolean(document[fn.fullscreenElement]);
+    if (Object.defineProperties) {
+        Object.defineProperties(screenfull, {
+            isFullscreen: {
+                get: function () {
+                    return Boolean(document[fn.fullscreenElement]);
+                }
+            },
+            element: {
+                enumerable: true,
+                get: function () {
+                    return document[fn.fullscreenElement];
+                }
+            },
+            enabled: {
+                enumerable: true,
+                get: function () {
+                    // Coerce to boolean in case of old WebKit
+                    return Boolean(document[fn.fullscreenEnabled]);
+                }
             }
-        },
-        element: {
-            enumerable: true,
-            get: function () {
-                return document[fn.fullscreenElement];
-            }
-        },
-        enabled: {
-            enumerable: true,
-            get: function () {
-                // Coerce to boolean in case of old WebKit
-                return Boolean(document[fn.fullscreenEnabled]);
-            }
-        }
-    });
+        });
+    }
 
     if (isCommonjs) {
         module.exports = screenfull;

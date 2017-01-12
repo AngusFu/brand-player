@@ -19,7 +19,9 @@ module.exports = function ready(player, elem) {
         this.on('mousedown', function (e) {
             e.preventDefault();
 
-            option.onstart && option.onstart();
+            if (option.onstart) {
+                option.onstart();
+            }
 
             var left = $self.offset().left;
             var width = $self.width();
@@ -36,13 +38,17 @@ module.exports = function ready(player, elem) {
             
             var mousemove = 'mousemove.' + (+new Date());
             var update = function (e) {
-                option.onchange && option.onchange(calcPercent(e));
+                if (option.onchange) {
+                    option.onchange(calcPercent(e));
+                }
             };
 
             $document.on(mousemove, throttle(update, 100, true));
             $document.one('mouseup', function (e) {
                 $document.off(mousemove);
-                option.onend && option.onend(calcPercent(e));
+                if (option.onend) {
+                    option.onend(calcPercent(e));
+                } 
             });
             update(e);
         });
@@ -51,11 +57,11 @@ module.exports = function ready(player, elem) {
 
     // 右键
     // TODO 添加版权信息
-    if (player.mode !== 'swf') {
-        $playerWrap.on('contextmenu', function (e) {
-            // console.log(e);
-        });
-    }
+    // if (player.mode !== 'swf') {
+    //     $playerWrap.on('contextmenu', function () {
+    //         // console.log(e);
+    //     });
+    // }
 
     //-----------------------------------------------------------------------
     // 控制面板
@@ -65,13 +71,15 @@ module.exports = function ready(player, elem) {
 
     // 是否为静默状态
     var isSilent = function () {
-        return player.prop('ended') || player.prop('paused') && player.prop('currentTime') === 0
+        return player.prop('ended') || player.prop('paused') && player.prop('currentTime') === 0;
     };
 
     // 显示控件
     var showControlPane = function () {
         // 静默状态下不显示
-        if (isSilent()) return;
+        if (isSilent()) {
+            return;
+        }
 
         $controlPane.animate({
             bottom: 0,
@@ -81,7 +89,9 @@ module.exports = function ready(player, elem) {
     // 隐藏控件
     var hideControlPane = function () {
         // 暂停情况下 还是需要显示控件
-        if (!isSilent() && player.prop("paused") || isFullScreen()) return;
+        if (!isSilent() && player.prop('paused') || isFullScreen()) {
+            return;
+        }
 
         $controlPane.animate({
             bottom: -40,
@@ -140,7 +150,9 @@ module.exports = function ready(player, elem) {
     var CIRCLE_WIDTH = 0;
 
     var updateProgressUI = function () {
-        if (IS_SLIDING) return;
+        if (IS_SLIDING) {
+            return;
+        }
 
         CIRCLE_WIDTH = CIRCLE_WIDTH || $progressCircle.width();
 
@@ -179,20 +191,20 @@ module.exports = function ready(player, elem) {
         },
         onchange: function (percent) {
             var dura = player.prop('duration');
-            percent = percent < .95 ? percent : .95;
+            percent = percent < 0.95 ? percent : 0.95;
             player.seekTo(percent * dura);
             $progressTime.text(format(dura * percent) + '/' + format(dura));
         },
         onend: function (percent) {
             IS_SLIDING = false;
-            percent = percent < .95 ? percent : .95;
+            percent = percent < 0.95 ? percent : 0.95;
             player.seekTo(percent * player.prop('duration'));
             player.play();
         }
     });
 
     // -------------------------------------------------------------------
-    var $videoPlayBtn  = _$('.video-control-play')
+    var $videoPlayBtn  = _$('.video-control-play');
     var $videoPlayIcon = _$('.video-control-play-btn');
     var CLASS_PLAYING = 'video-control-play-btn__playing';
 
@@ -214,7 +226,9 @@ module.exports = function ready(player, elem) {
 
     // 开始加载
     player.on('loadstart', function () {
-        if (player.mode === 'video' && player.options.preload && !player.options.autoplay) return;
+        if (player.mode === 'video' && player.options.preload && !player.options.autoplay) {
+            return;
+        }
         $posterAndPlayBtn.hide();
         $loading.show();
     });
@@ -233,7 +247,7 @@ module.exports = function ready(player, elem) {
     });
 
     // 可以播放
-    player.on('canplaythrough', function(e) {
+    player.on('canplaythrough', function () {
         clearInterval(timer);
         updateProgressUI();
         $videoPlayIcon.addClass(CLASS_PLAYING);
@@ -285,30 +299,17 @@ module.exports = function ready(player, elem) {
 
 
     //----------------------------------------------------------
-    // 打点
-    var rDOMEvents = /^on(blur|focus|focusin|focusout|load|resize|scroll|unload|click|dblclick|mousedown|mouseup|mousemove|mouseover|mouseout|mouseenter|mouseleave|change|select|submit|keydown|keypress|keyup|error|contextmenu)\=/i;
     var clickUrl = player.clickUrl;
-    var clickTrack = player.clickUrlTrack || '';
-    // 去掉打点事件可能存在的 `onXXXX=""` 前缀
-    clickTrack = clickTrack.replace(rDOMEvents, '');
-
+    var clickTrack = player.clickUrlTrack;
     if (clickUrl) {
         $poster.css('cursor', 'pointer');
-    } 
-
+    }
     var openUrl = function () {
         if (clickUrl && !isFullScreen()) {
-            try {
-                if (clickTrack) {
-                    var fn = new Function(clickTrack);
-                    fn();
-                }
-            } catch (e) {}
-
+            player.track(clickTrack);
             window.open(clickUrl);
         } 
     };
-
     // 跳转打点
     $poster.on('click', openUrl);
     player.on('click', function () {
@@ -347,17 +348,14 @@ module.exports = function ready(player, elem) {
 
         var isMuted = player.prop('muted');
         var className = 'video-volume-btn__' + (
-            volume === 0 || isMuted
-                ? 'muted'
-                : volume <  1/3
-                    ? 1
-                    : (volume < 2/3)
-                        ? 2
-                        : 3
+            (volume === 0 || isMuted) ? 'muted' : (
+                (volume <  1/3) ? 1 : ((volume < 2/3) ? 2 : 3)
+            )
         );
         
         btn.className = btn.className.replace(/video-volume-btn__(\d|muted)/g, '') + className;
     };
+    
     var updateVolumeUI = function () {
         setVolumeUI(player.prop('muted') ? 0 : player.prop('volume'));
     };
@@ -405,9 +403,9 @@ module.exports = function ready(player, elem) {
         $rootBody.toggleClass(CLASS_BODY_HIDDEN);
 
         if (screenfull) {
-            screenfull.toggle($playerWrap[0])
+            screenfull.toggle($playerWrap[0]);
         } else {
-            $playerWrap.toggleClass(CLASS_FULL_SCREEN)
+            $playerWrap.toggleClass(CLASS_FULL_SCREEN);
         }
         $expandIcon.toggleClass(CLASS_BTN_EXPAND);
         $playerWrap.toggleClass(CLASS__FULL_SCREEN_IDENT);
@@ -423,21 +421,23 @@ module.exports = function ready(player, elem) {
     // 真正全屏状态下  ESC退出时
     // keydown 事件是无法捕获到的
     // 所以只能通过 fullscreenchange 事件进行
-    screenfull && $(window).on(screenfull.raw.fullscreenchange, function (e) {
-        if (!screenfull.isFullscreen) {
-            $rootBody.removeClass(CLASS_BODY_HIDDEN);
-            $expandIcon.removeClass(CLASS_BTN_EXPAND);
-            $playerWrap.removeClass(CLASS_FULL_SCREEN);
-            $playerWrap.removeClass(CLASS__FULL_SCREEN_IDENT);
-        } else {
-            $rootBody.addClass(CLASS_BODY_HIDDEN);
-        }
-        
-        updateControlView();
-        updateTimeline();
-        updateVolumeUI();
-        updateProgressUI();
-    });
+    if (screenfull) {
+        $(window).on(screenfull.raw.fullscreenchange, function () {
+            if (!screenfull.isFullscreen) {
+                $rootBody.removeClass(CLASS_BODY_HIDDEN);
+                $expandIcon.removeClass(CLASS_BTN_EXPAND);
+                $playerWrap.removeClass(CLASS_FULL_SCREEN);
+                $playerWrap.removeClass(CLASS__FULL_SCREEN_IDENT);
+            } else {
+                $rootBody.addClass(CLASS_BODY_HIDDEN);
+            }
+            
+            updateControlView();
+            updateTimeline();
+            updateVolumeUI();
+            updateProgressUI();
+        });
+    }
 
     //-----------------------------------------------------------------------
     // 双击全屏切换支持
@@ -475,7 +475,9 @@ module.exports = function ready(player, elem) {
     // 进度百分比
     // incr: [0, 1]
     function seekByDecimal(incr) {
-        if (player.mode === 'swf') return;
+        if (player.mode === 'swf') {
+            return;
+        }
         var dura = player.prop('duration');
 
         // duration 为 0
@@ -492,7 +494,11 @@ module.exports = function ready(player, elem) {
         player.seekTo(dura * res);
 
         if (res === 1) {
-            player.options.loop ? player.replay() : player.pause();
+            if (player.options.loop) {
+                player.replay();
+            } else {
+                player.pause();
+            }
         } else {
             player.play();
         }
@@ -517,7 +523,9 @@ module.exports = function ready(player, elem) {
     // 空格(32) 暂停
     $document.on('keydown.vjs', function (e) {
         // 非全屏状态 不管
-        if(!isFullScreen()) return;
+        if(!isFullScreen()) {
+            return;
+        }
 
         var key = +e.keyCode;
         if(key === 116) {
@@ -544,7 +552,9 @@ module.exports = function ready(player, elem) {
     // 非全屏状态下 
     // 空格键控制播放 以及 F5 控制刷新的功能都不受限制 
     $playerWrap.on('keydown.vjs', function (e) {
-        if (isFullScreen()) return;
+        if (isFullScreen()) {
+            return;
+        }
 
         var key = e.keyCode;
         if (key === 32) {
@@ -565,7 +575,7 @@ module.exports = function ready(player, elem) {
         updateVolumeUI();
         // 已经停止或已经放完之后 需要手动更新
         // 播放时只更新 PROGRESS_TOTAL 就足够
-        if (player.prop('ended') || player.prop("paused")) {
+        if (player.prop('ended') || player.prop('paused')) {
             updateProgressUI();
         }
     }, 100));
@@ -581,7 +591,7 @@ module.exports = function ready(player, elem) {
             return player.replay();
         }
         
-        if (player.prop("paused")) {
+        if (player.prop('paused')) {
             return player.play();
         }
 
@@ -606,8 +616,8 @@ module.exports = function ready(player, elem) {
             };
         return function () {
             curr= +new Date();
-            context = this,
-            args = arguments,
+            context = this;
+            args = arguments;
             diff = curr - (debounce ? last_call : last_exec) - delay;
             clearTimeout(timer);
             if (debounce) {
@@ -624,7 +634,7 @@ module.exports = function ready(player, elem) {
                 }
             }
             last_call = curr;
-        }
+        };
     }
-
 };
+
