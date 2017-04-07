@@ -1,3 +1,8 @@
+## version 1.2.0
+
+- 修复播放器非常窄的情况下的控件显示 bug
+- 添加 simulateFullScreen 选项，用于控制不支持原生 fullscreen 情况下是否启用模拟功能
+
 ## version 1.1.4
 
 - 改用 rollup 打包

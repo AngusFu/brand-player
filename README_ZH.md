@@ -1,38 +1,35 @@
 # Brand Player
 
-[中文](./README_ZH.md)
+## 特点
 
-## Features
+- 兼容至 IE7
+- 基于 MP4 格式
+- 能够完全控制播放元素
+- 基于 HTML5 Video 元素 API
 
-- IE7 Compitable
-- MP4 Oriented
-- Full Control over Video Element 
-- Simple API: HTML5-like
+## 注意
 
-## Notes
+定制的时候需要注意一下几点：
 
-There are some rules you should follow when customizing.
+- 为保证兼容，尽可能使用 ES3 语法
+- 避免使用 `default``catch` 等关键词作为变量名、键值
+- 谨慎引入第三方文件
 
-- Use ES3
-- Avoid keywords, e.g. `default``catch`
-- Take care when importing third-party packages
- 
-
-## Usage
+## 使用
 
 ```javascript
 var vplayer = $.vPlayer("#container", {
-    // force FLASH mode
+    // mode=swf: 强制使用 FLASH 模式
     // mode: 'swf',
 
-    // click on the stage will open a new window
+    // 点击视频需要打开的网址
     clickUrl: "//baidu.com",
-    // click stage
+    // 视频点击打点
     clickUrlTrack: function () {
         alert(222)
     },
 
-    // every time the video replays from the begining
+    // 视频从头开始播放时记录的打点
     playTrack: "console.log('start palying')",
     
     // poster source
@@ -47,9 +44,7 @@ var vplayer = $.vPlayer("#container", {
     muted: true,
 
     // default: true
-    // if set to false
-    // fullscreen button will be hidden
-    // when native fullScreen API unsupported
+    // 不支持原生全屏 API 的情况下是否启用模拟
     simulateFullScreen: false
 });
 

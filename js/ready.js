@@ -67,7 +67,7 @@ module.exports = function ready(player, elem) {
     // 控制面板
     var $controlPane = _$('.video-control');
     // 时间显示
-    var $progressTime   = $playerWrap.find('.video-time');
+    var $progressTime = $playerWrap.find('.video-time');
 
     // 是否为静默状态
     var isSilent = function () {
@@ -106,8 +106,10 @@ module.exports = function ready(player, elem) {
 
     // 小容器下面的样式修正
     // 目前主要做的是隐藏时间
+    var hideProgressTime = true;
     var updateControlView = function () {
-        if ($controlPane.width() <= 250) {
+        hideProgressTime = $controlPane.width() <= 250;
+        if (hideProgressTime) {
             $progressTime.hide();
         } else {
             $progressTime.show();
@@ -241,7 +243,9 @@ module.exports = function ready(player, elem) {
             $progressTime.hide();
             $progressWrap.hide();
         } else {
-            $progressTime.show();
+            if (!hideProgressTime) {
+                $progressTime.show();
+            }
             $progressWrap.show();
         }
     });
@@ -416,7 +420,11 @@ module.exports = function ready(player, elem) {
         updateProgressUI();
     };
 
-    $expandBtn.on('click', toggleFullScreen);
+    if (!screenfull && !player.options.simulateFullScreen) {
+        $expandIcon.hide();
+    } else {
+        $expandBtn.on('click', toggleFullScreen);
+    }
 
     // 真正全屏状态下  ESC退出时
     // keydown 事件是无法捕获到的

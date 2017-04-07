@@ -26,7 +26,8 @@ function SwfPlayer(selector, options) {
         loop: false,
         autoplay: false,
         muted: false,
-        volume: 1
+        volume: 1,
+        simulateFullScreen: true
     }, options);
     
     this.options = options;
@@ -534,6 +535,11 @@ $.fn.vPlayer = function () {
         var muted = $el.attr('muted');
         if (muted !== void 0) {
             config.muted = true;
+        }
+
+        var simulatefullscreen = $el.attr('simulatefullscreen');
+        if (simulatefullscreen !== void 0) {
+            config.simulateFullScreen = true;
         }
 
         var volume = $el.attr('volume');
