@@ -20,7 +20,7 @@ There are some rules you should follow when customizing.
 
 ## Usage
 
-CDN：https://s1.ssl.qhres.com/static/9e95cf43e154f231.js
+CDN：https://s4.ssl.qhres.com/static/9e7a72df709fff44.js
 
 ```javascript
 var vplayer = $.vPlayer("#container", {

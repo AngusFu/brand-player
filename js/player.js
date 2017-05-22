@@ -584,6 +584,8 @@ $.fn.vPlayer = function () {
     return this;
 };
 
+vPlayer.timers = timers;
+
 /**
  * 事件回调
  */
