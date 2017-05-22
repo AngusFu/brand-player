@@ -17,8 +17,6 @@
 
 ## 使用
 
-CDN：https://s4.ssl.qhres.com/static/9e7a72df709fff44.js
-
 ```javascript
 var vplayer = $.vPlayer("#container", {
     // mode=swf: 强制使用 FLASH 模式

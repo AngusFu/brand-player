@@ -1,2 +1,2356 @@
-!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define(t):e.vPlayer=t()}(this,function(){"use strict";function e(e,t){t=$.extend({},{swfUrl:w.swf,loading:w.loading,bgcolor:"#000",preload:!1,loop:!1,autoplay:!1,muted:!1,volume:1,simulateFullScreen:!0},t),this.options=t,this.vid=this.getVID(),T[this.vid]=this,this.readyCalls=[m];var o=$(e);o.empty(),b.clone().appendTo(o),this.$wrap=o.find(".video-wrapper"),this.$wrap.prepend('<div id="'+this.vid+'"></div>'),this.clickUrl=$.trim(t.clickUrl||"");var n=t.clickUrlTrack||"",i=t.playTrack||"";this.clickUrlTrack=$.isFunction(n)?n:$.trim(n).replace(E,""),this.playTrack=$.isFunction(i)?i:$.trim(i).replace(E,""),t.poster&&this.$wrap.find(".vplayer-poster img").attr("src",t.poster),this.$wrap.find(".vplayer-loading").attr("src",t.loading);var r=!1===/^0{0,3}$/.test(x.ua.pv.join("")),a=x.hasFlashPlayerVersion("11.4.0");r&&a?this.createPlayer():this.$wrap.find(".flash-tip").show()}function t(){e.apply(this,arguments)}var o={swf:"//s5.ssl.qhres.com/static/fca83421739b4383.swf",sprite:"//p5.ssl.qhimg.com/t0154249c11cb1852d0.png",loading:"//p5.ssl.qhimg.com/t017699817e7d9bb0fd.gif"},n=function(e){var t=document.createElement("style");t.rel="stylesheet",t.type="text/css",t.styleSheet?t.styleSheet.cssText=e:t.appendChild(document.createTextNode(e)),document.getElementsByTagName("head")[0].appendChild(t)},i=".body__hidden{overflow:hidden !important}.video-wrapper{position:relative;width:100%;height:100%;background:#000;overflow:hidden !important;-webkit-transform:translate3d(0, 0, 0);transform:translate3d(0, 0, 0)}.video-wrapper__fullscreen{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;z-index:99999999999}.video-wrapper>video{display:block;width:100%;height:100%;outline:0 !important}.video-control{position:absolute;bottom:-40px;left:0;right:0;width:100%;height:30px;z-index:888;padding-top:10px;background:url(__sprite) 0 -190px;_padding-top:7px;_background-position:0 -195px}.video-control>.video-progress{position:absolute;left:0;right:0;z-index:999;top:4px;width:100%;height:12px;overflow:hidden;zoom:1}.video-progress .v-p-total{position:absolute;left:0;right:0;top:5px;height:2px;width:100%;background-color:#555}.video-progress .v-p-total .v-p-cur{float:left;height:2px;width:0;background-color:#2b2b2b}.video-progress .v-p-total .v-p-ctrl{position:absolute;left:0;top:-5px;width:12px;height:12px;background:url(__sprite) 0 -20px no-repeat}.video-time,.video-volume,.video-expand{float:right}.video-control-play{float:left;overflow:hidden;padding:8px 10px 7px 20px}.video-time{display:none;float:left;font-size:12px;color:#fff;font-family:Microsoft Yahei;padding:0;line-height:30px}.video-control-play-btn:hover,.video-volume-btn:hover,.video-expand-btn:hover{opacity:.8;filter:alpha(opacity=80)}.video-control-play-btn{width:14px;height:15px;background:url(__sprite) no-repeat}.video-control-play-btn__paused{background-position:-20px -20px}.video-control-play-btn__playing{background-position:-40px -20px}.video-expand{padding:7px 20px 7px 16px}.video-expand-btn{width:18px;height:16px}.video-expand-btn__normal{background:url(__sprite) -60px -20px no-repeat}.video-volume{padding:7px 2px 7px 0}.video-volume-btn{display:block;width:19px;height:16px;background:url(__sprite) 0 0 no-repeat}.video-volume-btn__muted{background-position:0 0}.video-volume-btn__1{background-position:-20px 0}.video-volume-btn__2{background-position:-40px 0}.video-volume-btn__3{background-position:-60px 0}.video-volume-ctrl{float:right;width:30%;max-width:60px;min-width:40px;height:30px;position:relative}.volume-total{position:absolute;left:0;right:0;top:14px;height:2px;background-color:#fff}.volume-cur{float:left;height:2px;width:0;background-color:#fff}.volume-ctrl{position:absolute;left:0;top:-5px;width:12px;height:12px;background:url(__sprite) 0 -20px no-repeat}.vplayer-poster,.vplayer-poster img{position:absolute;left:0;right:0;top:0;bottom:0;width:100%;height:100%;z-index:999}.vplayer-loading,.vplayer-play-btn{width:70px;height:70px;position:absolute;left:50%;top:50%;margin-top:-35px;margin-left:-35px;cursor:pointer;z-index:1000}.vplayer-play-btn{background:url(__sprite) 0 -40px no-repeat}.vplayer-play-btn:hover{background-position:-80px -40px}.vplayer-play-pause{background-position:0 -120px !important}.vplayer-play-pause:hover{opacity:.8;filter:alpha(opacity=80)}.flash-tip{display:none;position:absolute;top:0;right:0;bottom:0;left:0;z-index:1111;background:#424242}.flash-tip a{position:absolute;top:0;right:0;bottom:0;left:0;height:40px;line-height:40px;text-align:center;color:#ffff;overflow:hidden;text-overflow:ellipsis;margin:auto;text-decoration:none}\n",r={__def:i},a=' <div class="video-wrapper"> <div class="video-control"> <div class="video-progress"> <div class="v-p-total"> <div class="ctrl v-p-ctrl"></div> <div class="v-p-cur"></div> </div> </div> <div style="overflow: hidden"> <div class="video-control-play"> <div class="video-control-play-btn video-control-play-btn__paused"></div> </div> <div class="video-time">00:00/00:00</div> <div class="video-expand"> <div class="video-expand-btn video-expand-btn__normal"></div> </div> <div class="video-volume-ctrl"> <div class="volume-total"> <div class="ctrl volume-ctrl"></div> <div class="volume-cur"></div> </div> </div> <div class="video-volume"> <div class="video-volume-btn video-volume-btn__muted"></div> </div> </div> </div> <div class="vplayer-poster"> <img alt=""> </div> <div class="vplayer-play-btn"></div> <img alt="" class="vplayer-loading" style="display: none"> <div class="flash-tip"> <a href="http://www.adobe.com/go/getflashplayer" target="_blank" title="升级Flash插件"> 点击升级 Flash 插件 </a> </div> </div>',l={__def:a},s=window,d=s.So&&s.So.page&&s.So.page.timer||[],p=d,c=function(){function e(){if(!q&&document.getElementsByTagName("body")[0]){try{var e,t=w("span");t.style.display="none",e=M.getElementsByTagName("body")[0].appendChild(t),e.parentNode.removeChild(e),e=null,t=null}catch(e){return}q=!0;for(var o=z.length,n=0;n<o;n++)z[n]()}}function t(e){q?e():z[z.length]=e}function o(e){if(typeof U.addEventListener!==I)U.addEventListener("load",e,!1);else if(typeof M.addEventListener!==I)M.addEventListener("load",e,!1);else if(typeof U.attachEvent!==I)x(U,"onload",e);else if("function"==typeof U.onload){var t=U.onload;U.onload=function(){t(),e()}}else U.onload=e}function n(){var e=M.getElementsByTagName("body")[0],t=w(P);t.setAttribute("style","visibility: hidden;"),t.setAttribute("type",B);var o=e.appendChild(t);if(o){var n=0;!function r(){if(typeof o.GetVariable!==I)try{var a=o.GetVariable("$version");a&&(a=a.split(" ")[1].split(","),G.pv=[b(a[0]),b(a[1]),b(a[2])])}catch(e){G.pv=[8,0,0]}else if(n<10){n++;var l=setTimeout(r,10);return void p.push(l)}e.removeChild(t),o=null,i()}()}else i()}function i(){var e=V.length;if(e>0)for(var t=0;t<e;t++){var o=V[t].id,n=V[t].callbackFn,i={success:!1,id:o};if(G.pv[0]>0){var d=g(o);if(d)if(!k(V[t].swfVersion)||G.wk&&G.wk<312)if(V[t].expressInstall&&a()){var p={};p.data=V[t].expressInstall,p.width=d.getAttribute("width")||"0",p.height=d.getAttribute("height")||"0",d.getAttribute("class")&&(p.styleclass=d.getAttribute("class")),d.getAttribute("align")&&(p.align=d.getAttribute("align"));for(var c={},u=d.getElementsByTagName("param"),v=u.length,f=0;f<v;f++)"movie"!==u[f].getAttribute("name").toLowerCase()&&(c[u[f].getAttribute("name")]=u[f].getAttribute("value"));l(p,c,o,n)}else s(d),n&&n(i);else E(o,!0),n&&(i.success=!0,i.ref=r(o),i.id=o,n(i))}else if(E(o,!0),n){var h=r(o);h&&typeof h.SetVariable!==I&&(i.success=!0,i.ref=h,i.id=h.id),n(i)}}}function r(e){var t=null,o=g(e);return o&&"OBJECT"===o.nodeName.toUpperCase()&&(t=typeof o.SetVariable!==I?o:o.getElementsByTagName(P)[0]||o),t}function a(){return!W&&k("6.0.65")&&(G.win||G.mac)&&!(G.wk&&G.wk<312)}function l(e,t,o,n){var i=g(o);if(o=y(o),W=!0,$=n||null,F={success:!1,id:o},i){"OBJECT"===i.nodeName.toUpperCase()?(C=d(i),S=null):(C=i,S=o),e.id=L,(typeof e.width===I||!/%$/.test(e.width)&&b(e.width)<310)&&(e.width="310"),(typeof e.height===I||!/%$/.test(e.height)&&b(e.height)<137)&&(e.height="137");var r=G.ie?"ActiveX":"PlugIn",a="MMredirectURL="+encodeURIComponent(U.location.toString().replace(/&/g,"%26"))+"&MMplayerType="+r+"&MMdoctitle="+encodeURIComponent(M.title.slice(0,47)+" - Flash Player Installation");if(typeof t.flashvars!==I?t.flashvars+="&"+a:t.flashvars=a,G.ie&&4!=i.readyState){var l=w("div");o+="SWFObjectNew",l.setAttribute("id",o),i.parentNode.insertBefore(l,i),i.style.display="none",h(i)}v(e,t,o)}}function s(e){if(G.ie&&4!=e.readyState){e.style.display="none";var t=w("div");e.parentNode.insertBefore(t,e),t.parentNode.replaceChild(d(e),t),h(e)}else e.parentNode.replaceChild(d(e),e)}function d(e){var t=w("div");if(G.win&&G.ie)t.innerHTML=e.innerHTML;else{var o=e.getElementsByTagName(P)[0];if(o){var n=o.childNodes;if(n)for(var i=n.length,r=0;r<i;r++)1==n[r].nodeType&&"PARAM"===n[r].nodeName||8==n[r].nodeType||t.appendChild(n[r].cloneNode(!0))}}return t}function u(e,t){var o=w("div");return o.innerHTML="<object classid='clsid:D27CDB6E-AE6D-11cf-96B8-444553540000'><param name='movie' value='"+e+"'>"+t+"</object>",o.firstChild}function v(e,t,o){var n,i=g(o);if(o=y(o),G.wk&&G.wk<312)return n;if(i){var r,a,l,s=w(G.ie?"div":P);typeof e.id===I&&(e.id=o);for(l in t)t.hasOwnProperty(l)&&"movie"!==l.toLowerCase()&&f(s,l,t[l]);G.ie&&(s=u(e.data,s.innerHTML));for(r in e)e.hasOwnProperty(r)&&(a=r.toLowerCase(),"styleclass"===a?s.setAttribute("class",e[r]):"classid"!==a&&"data"!==a&&s.setAttribute(r,e[r]));G.ie?R[R.length]=e.id:(s.setAttribute("type",B),s.setAttribute("data",e.data)),i.parentNode.replaceChild(s,i),n=s}return n}function f(e,t,o){var n=w("param");n.setAttribute("name",t),n.setAttribute("value",o),e.appendChild(n)}function h(e){var t=g(e);t&&"OBJECT"===t.nodeName.toUpperCase()&&(G.ie?(t.style.display="none",function e(){if(4==t.readyState){for(var o in t)"function"==typeof t[o]&&(t[o]=null);t.parentNode.removeChild(t)}else{var n=setTimeout(e,10);p.push(n)}}()):t.parentNode.removeChild(t))}function m(e){return e&&e.nodeType&&1===e.nodeType}function y(e){return m(e)?e.id:e}function g(e){if(m(e))return e;var t=null;try{t=M.getElementById(e)}catch(e){}return t}function w(e){return M.createElement(e)}function b(e){return parseInt(e,10)}function x(e,t,o){e.attachEvent(t,o),D[D.length]=[e,t,o]}function k(e){e+="";var t=G.pv,o=e.split(".");return o[0]=b(o[0]),o[1]=b(o[1])||0,o[2]=b(o[2])||0,t[0]>o[0]||t[0]==o[0]&&t[1]>o[1]||t[0]==o[0]&&t[1]==o[1]&&t[2]>=o[2]}function _(e,t,o,n){var i=M.getElementsByTagName("head")[0];if(i){var r="string"==typeof o?o:"screen";if(n&&(N=null,A=null),!N||A!=r){var a=w("style");a.setAttribute("type","text/css"),a.setAttribute("media",r),N=i.appendChild(a),G.ie&&typeof M.styleSheets!==I&&M.styleSheets.length>0&&(N=M.styleSheets[M.styleSheets.length-1]),A=r}N&&(typeof N.addRule!==I?N.addRule(e,t):typeof M.createTextNode!==I&&N.appendChild(M.createTextNode(e+" {"+t+"}")))}}function E(e,t){if(H){var o=t?"visible":"hidden",n=g(e);q&&n?n.style.visibility=o:"string"==typeof e&&_("#"+e,"visibility:"+o)}}function T(e){return null!==/[\\\"<>\.;]/.exec(e)&&typeof encodeURIComponent!==I?encodeURIComponent(e):e}var C,S,$,F,N,A,I="undefined",P="object",B="application/x-shockwave-flash",L="SWFObjectExprInst",U=window,M=document,O=navigator,j=!1,z=[],V=[],R=[],D=[],q=!1,W=!1,H=!0,X=!1,G=function(){var e=typeof M.getElementById!==I&&typeof M.getElementsByTagName!==I&&typeof M.createElement!==I,t=O.userAgent.toLowerCase(),o=O.platform.toLowerCase(),n=/win/.test(o?o:t),i=/mac/.test(o?o:t),r=!!/webkit/.test(t)&&parseFloat(t.replace(/^.*webkit\/(\d+(\.\d+)?).*$/,"$1")),a="Microsoft Internet Explorer"===O.appName,l=[0,0,0],s=null;if(typeof O.plugins!==I&&typeof O.plugins["Shockwave Flash"]===P)(s=O.plugins["Shockwave Flash"].description)&&typeof O.mimeTypes!==I&&O.mimeTypes[B]&&O.mimeTypes[B].enabledPlugin&&(j=!0,a=!1,s=s.replace(/^.*\s+(\S+\s+\S+$)/,"$1"),l[0]=b(s.replace(/^(.*)\..*$/,"$1")),l[1]=b(s.replace(/^.*\.(.*)\s.*$/,"$1")),l[2]=/[a-zA-Z]/.test(s)?b(s.replace(/^.*[a-zA-Z]+(.*)$/,"$1")):0);else if(typeof U.ActiveXObject!==I)try{var d=new ActiveXObject("ShockwaveFlash.ShockwaveFlash");d&&(s=d.GetVariable("$version"))&&(a=!0,s=s.split(" ")[1].split(","),l=[b(s[0]),b(s[1]),b(s[2])])}catch(e){}return{w3:e,pv:l,wk:r,ie:a,win:n,mac:i}}();!function(){G.w3&&((typeof M.readyState!==I&&("complete"===M.readyState||"interactive"===M.readyState)||typeof M.readyState===I&&(M.getElementsByTagName("body")[0]||M.body))&&e(),q||(typeof M.addEventListener!==I&&M.addEventListener("DOMContentLoaded",e,!1),G.ie&&(M.attachEvent("onreadystatechange",function t(){"complete"===M.readyState&&(M.detachEvent("onreadystatechange",t),e())}),U==top&&function t(){if(!q){try{M.documentElement.doScroll("left")}catch(e){var o=setTimeout(t,0);return void p.push(o)}e()}}()),G.wk&&function t(){if(!q){if(!/loaded|complete/.test(M.readyState)){var o=setTimeout(t,0);return void p.push(o)}e()}}()))}();z[0]=function(){j?n():i()};!function(){G.ie&&window.attachEvent("onunload",function(){for(var e=D.length,t=0;t<e;t++)D[t][0].detachEvent(D[t][1],D[t][2]);for(var o=R.length,n=0;n<o;n++)h(R[n]);for(var i in G)G[i]=null;G=null;for(var r in c)c[r]=null;c=null})}();return{registerObject:function(e,t,o,n){if(G.w3&&e&&t){var i={};i.id=e,i.swfVersion=t,i.expressInstall=o,i.callbackFn=n,V[V.length]=i,E(e,!1)}else n&&n({success:!1,id:e})},getObjectById:function(e){if(G.w3)return r(e)},embedSWF:function(e,o,n,i,r,s,d,p,c,u){var f=y(o),h={success:!1,id:f};G.w3&&!(G.wk&&G.wk<312)&&e&&o&&n&&i&&r?(E(f,!1),t(function(){n+="",i+="";var t={};if(c&&typeof c===P)for(var m in c)t[m]=c[m];t.data=e,t.width=n,t.height=i;var y={};if(p&&typeof p===P)for(var g in p)y[g]=p[g];if(d&&typeof d===P)for(var w in d)if(d.hasOwnProperty(w)){var b=X?encodeURIComponent(w):w,x=X?encodeURIComponent(d[w]):d[w];typeof y.flashvars!==I?y.flashvars+="&"+b+"="+x:y.flashvars=b+"="+x}if(k(r)){var _=v(t,y,o);t.id==f&&E(f,!0),h.success=!0,h.ref=_,h.id=_.id}else{if(s&&a())return t.data=s,void l(t,y,o,u);E(f,!0)}u&&u(h)})):u&&u(h)},switchOffAutoHideShow:function(){H=!1},enableUriEncoding:function(e){X=typeof e===I||e},ua:G,getFlashPlayerVersion:function(){return{major:G.pv[0],minor:G.pv[1],release:G.pv[2]}},hasFlashPlayerVersion:k,createSWF:function(e,t,o){return G.w3?v(e,t,o):void 0},showExpressInstall:function(e,t,o,n){G.w3&&a()&&l(e,t,o,n)},removeSWF:function(e){G.w3&&h(e)},createCSS:function(e,t,o,n){G.w3&&_(e,t,o,n)},addDomLoadEvent:t,addLoadEvent:o,getQueryParamValue:function(e){var t=M.location.search||M.location.hash;if(t){if(/\?/.test(t)&&(t=t.split("?")[1]),!e)return T(t);for(var o=t.split("&"),n=0;n<o.length;n++)if(o[n].substring(0,o[n].indexOf("="))==e)return T(o[n].substring(o[n].indexOf("=")+1))}return""},expressInstallCallback:function(){if(W){var e=g(L);e&&C&&(e.parentNode.replaceChild(C,e),S&&(E(S,!0),G.ie&&(C.style.display="block")),$&&$(F)),W=!1}},version:"2.3"}}(),u=c,v=function(e,t){return t={exports:{}},e(t,t.exports),t.exports}(function(e){!function(){var t=e.exports,o="undefined"!=typeof Element&&"ALLOW_KEYBOARD_INPUT"in Element,n=function(){for(var e,t,o=[["requestFullscreen","exitFullscreen","fullscreenElement","fullscreenEnabled","fullscreenchange","fullscreenerror"],["webkitRequestFullscreen","webkitExitFullscreen","webkitFullscreenElement","webkitFullscreenEnabled","webkitfullscreenchange","webkitfullscreenerror"],["webkitRequestFullScreen","webkitCancelFullScreen","webkitCurrentFullScreenElement","webkitCancelFullScreen","webkitfullscreenchange","webkitfullscreenerror"],["mozRequestFullScreen","mozCancelFullScreen","mozFullScreenElement","mozFullScreenEnabled","mozfullscreenchange","mozfullscreenerror"],["msRequestFullscreen","msExitFullscreen","msFullscreenElement","msFullscreenEnabled","MSFullscreenChange","MSFullscreenError"]],n=0,i=o.length,r={};n<i;n++)if((e=o[n])&&e[1]in document){for(n=0,t=e.length;n<t;n++)r[o[0][n]]=e[n];return r}return!1}(),i={request:function(e){var t=n.requestFullscreen;e=e||document.documentElement,/5\.1[\.\d]* Safari/.test(navigator.userAgent)?e[t]():e[t](o&&Element.ALLOW_KEYBOARD_INPUT)},exit:function(){document[n.exitFullscreen]()},toggle:function(e){this.isFullscreen?this.exit():this.request(e)},raw:n};if(!n)return void(t?e.exports=!1:window.screenfull=!1);Object.defineProperties&&Object.defineProperties(i,{isFullscreen:{get:function(){return Boolean(document[n.fullscreenElement])}},element:{enumerable:!0,get:function(){return document[n.fullscreenElement]}},enabled:{enumerable:!0,get:function(){return Boolean(document[n.fullscreenEnabled])}}}),t?e.exports=i:window.screenfull=i}()}),f=v,h=d,m=function(e,t){function o(t){var o=e.prop("volume"),n=o+t;n=n<0?0:n>1?1:n,e.prop("muted")&&n>0&&e.prop("muted",!1),e.prop("volume",n)}function n(t){if("swf"!==e.mode){var o=e.prop("duration");if(o&&!(e.prop("ended")&&t>0)){var n=e.prop("currentTime")/o,i=n+t;i=i<0?0:i>1?1:i,e.seekTo(o*i),1===i?e.options.loop?e.replay():e.pause():e.play()}}}function i(e){switch(+e){case 37:return n(-.1);case 39:return n(.1);case 38:return o(.1);case 40:return o(-.1)}}function r(){return e.prop("ended")?e.replay():e.prop("paused")?e.play():void e.pause()}function a(){return d.hasClass(K)}function l(e,t,o,n){var i,r,a,l=+new Date,s=0,d=0,p=null,c=function(){d=l,e.apply(r,a)};return function(){l=+new Date,r=this,a=arguments,i=l-(n?s:d)-t,clearTimeout(p),n?o?p=setTimeout(c,t):i>=0&&c():i>=0?c():o&&(p=setTimeout(c,-i)),h.push(p),s=l}}window["swf_"+t.id]=e;var s=$(document),d=e.$wrap,p=function(e){return d.find(e)};$.fn.ctrlSlider=function(e){var t=e.duration,o=e.current,n=e.controller,i=this;return this.on("mousedown",function(r){r.preventDefault(),e.onstart&&e.onstart();var a=i.offset().left,d=i.width(),p=function(e){var i=e.clientX-a;i=i<0?0:i>d?d:i;var r=i/t.width();return o.css("width",i),n.css("left",(d-n.width())*r),r},c="mousemove."+ +new Date,u=function(t){e.onchange&&e.onchange(p(t))};s.on(c,l(u,100,!0)),s.one("mouseup",function(t){s.off(c),e.onend&&e.onend(p(t))}),u(r)}),this};var c=p(".video-control"),u=d.find(".video-time"),v=function(){return e.prop("ended")||e.prop("paused")&&0===e.prop("currentTime")},m=function(){v()||c.animate({bottom:0,opacity:1},300)},y=function(){!v()&&e.prop("paused")||a()||c.animate({bottom:-40,opacity:0},200)};d.on("mouseenter",m).on("mouseleave",y);var g=!0,w=function(){g=c.width()<=250,g?u.hide():u.show()};w();var b=function(e){return""+(e<0?e:e<10?"0"+e:e)},x=function(e){return e=Math.round(+e),isNaN(e)&&(e=0),b(Math.floor(e/60))+":"+b(Math.floor(e%60))},k=p(".video-progress"),_=p(".v-p-total"),E=p(".v-p-cur"),T=p(".v-p-ctrl"),C=_.width(),S=function(){C=_.width()},F=!1,N=0,A=function(){if(!F){N=N||T.width();var t=e.prop("currentTime");isNaN(t)&&(t=0);var o=e.prop("duration");isNaN(o)||o<=0?u.text("--:--"):u.text(x(t)+"/"+x(o));var n=0;0!==o&&(n=t/o),n=Math.round(100*n)/100,E.css("width",C*n),T.css("left",(C-N)*n)}};k.ctrlSlider({duration:_,current:E,controller:T,onstart:function(){F=!0,e.pause()},onchange:function(t){var o=e.prop("duration");t=t<.95?t:.95,e.seekTo(t*o),u.text(x(o*t)+"/"+x(o))},onend:function(t){F=!1,t=t<.95?t:.95,e.seekTo(t*e.prop("duration")),e.play()}});var I=p(".video-control-play"),P=p(".video-control-play-btn"),B="video-control-play-btn__playing",L=p(".vplayer-poster, .vplayer-play-btn"),U=p(".vplayer-play-btn"),M=p(".vplayer-poster"),O=p(".vplayer-loading"),j=null;I.on("click",function(){r()}),U.on("click",function(){r(),m()}),e.on("loadstart",function(){"video"===e.mode&&e.options.preload&&!e.options.autoplay||(L.hide(),O.show())}),e.on("durationchange",function(){e.prop("duration")<=0?(u.hide(),k.hide()):(g||u.show(),k.show())}),e.on("canplaythrough",function(){clearInterval(j),A(),P.addClass(B),j=setInterval(function(){A()},30),h.push(j),L.hide();var e=setTimeout(function(){O.hide()},0);h.push(e)}),e.on("playing",function(){A(),P.addClass(B),clearInterval(j),j=setInterval(function(){A()},30),h.push(j),L.hide()}),e.on("pause",function(){clearInterval(j),A(),m(),P.removeClass(B),U.addClass("vplayer-play-pause").show()}),e.on("ended",function(){clearInterval(j),A(),y(),e.options.loop||(P.removeClass(B),L.show(),U.removeClass("vplayer-play-pause"))});var z=e.clickUrl,V=e.clickUrlTrack;z&&M.css("cursor","pointer");var R=function(){z&&!a()&&(e.track(V),window.open(z))};M.on("click",R),e.on("click",function(){e.pause(),R()});var D=p(".volume-total"),q=p(".volume-cur"),W=p(".volume-ctrl"),H=p(".video-volume-btn");p(".video-volume-ctrl").ctrlSlider({duration:D,current:q,controller:W,onstart:function(){},onchange:function(t){e.prop("muted",!1),e.prop("volume",t)},onend:function(t){e.prop("muted",!1),e.prop("volume",t)}});var X=function(t){var o=H[0],n=D.width();W.css("left",t*(n-W.width())),q.css("width",t*n);var i=e.prop("muted"),r="video-volume-btn__"+(0===t||i?"muted":t<1/3?1:t<2/3?2:3);o.className=o.className.replace(/video-volume-btn__(\d|muted)/g,"")+r},G=function(){X(e.prop("muted")?0:e.prop("volume"))};G(),e.on("volumechange",function(){var t=e.prop("volume");t<.01&&t>0&&e.prop("volume",0),e.prop("muted")&&(t=0),X(t)}),H.on("click",function(){e.prop("muted",!e.prop("muted"))});var J=p(".video-expand"),Y=p(".video-expand-btn"),K="isFullScreen",Z=$("html, body"),Q=function(){Z.toggleClass("body__hidden"),f?f.toggle(d[0]):d.toggleClass("video-wrapper__fullscreen"),Y.toggleClass("video-expand-btn__expanded"),d.toggleClass(K),w(),S(),G(),A()};f||e.options.simulateFullScreen?J.on("click",Q):Y.hide(),f&&$(window).on(f.raw.fullscreenchange,function(){f.isFullscreen?Z.addClass("body__hidden"):(Z.removeClass("body__hidden"),Y.removeClass("video-expand-btn__expanded"),d.removeClass("video-wrapper__fullscreen"),d.removeClass(K)),w(),S(),G(),A()}),s.on("keydown.vjs",function(e){if(a()){var t=+e.keyCode;116===t?location.reload():27===t?Q():32===t?r():i(t)}}),"swf"===e.mode&&e.on("esc",function(){a()&&Q()}),d.on("keydown.vjs",function(e){if(!a()){var t=e.keyCode;32===t?r():116===t?location.reload():i(t)}}).on("selectstart",function(e){e.preventDefault()}),$(window).on("resize",l(function(){w(),S(),G(),(e.prop("ended")||e.prop("paused"))&&A()},100))},y=r&&i||r,g=l&&a||l,w=o;!function(e){var t=document.createElement("style");t.rel="stylesheet",t.type="text/css",t.styleSheet?t.styleSheet.cssText=e:t.appendChild(document.createTextNode(e)),document.getElementsByTagName("head")[0].appendChild(t)}(y.replace(/__sprite/g,w.sprite));var b=$(g),x=u,k=d,_=$({}),E=/^on(blur|focus|focusin|focusout|load|resize|scroll|unload|click|dblclick|mousedown|mouseup|mousemove|mouseover|mouseout|mouseenter|mouseleave|change|select|submit|keydown|keypress|keyup|error|contextmenu)\=/i,T={};e.prototype={constructor:e,on:function(e,t){for(var o=e.split(/\s+/),n=0,i=o.length;n<i;n++)_.on.call(_,o[n]+"_"+this.vid,t);return this},off:function(e,t){if(e)for(var o=e.split(/\s+/),n=0,i=o.length;n<i;n++)_.off.call(_,o[n]+"_"+this.vid,t);else _.off();return this},getVID:function(){return"vjs_"+ +new Date},createPlayer:function(){this.mode="swf",this.$wrap.css("background-color",this.options.bgcolor);var e={src:this.options.src,autoplay:this.options.autoplay,preload:this.options.preload,loop:this.options.loop,volume:this.options.volume,muted:this.options.muted,allowFullScreen:!0,wmode:"transparent"},t={allowScriptAccess:"always",bgcolor:this.options.bgcolor,allowFullScreen:!0,wmode:"transparent"},o={id:this.vid,name:this.vid};x.embedSWF(this.options.swfUrl,this.vid,"100%","100%","10.3","",e,t,o),this.initEvents()},track:function(e){try{if($.isFunction(e))e();else{new Function(e)()}}catch(e){window.console&&window.console.log(e)}},applyPlayTrack:function(){var e=this.playTrack,t=this;e&&this.on("track",function(){t.track(e)})},initEvents:function(){var e=this;this.on("ready",function(){e.readyState="complete",e.vidElem=document.getElementById(e.vid);for(var t=e.readyCalls,o=0,n=t.length;o<n;o++)t[o].call(e,e,e.vidElem)}).on("stageclick",function(){_.trigger("click_"+e.vid)}).on("ended",function(){if(e.options.loop){var t=setTimeout(function(){e.replay()},100);k.push(t)}}).on("playing",function(){e.__not_first||(e.__not_first=!0,_.trigger("track_"+e.vid))}),this.applyPlayTrack()},ready:function(e){return"complete"===this.readyState?e.call(this,this,this.vidElem,this.$wrap):this.readyCalls.push(e),this},setSource:function(e){return this.vidElem.vjs_src(e),this},play:function(){var e=this.prop("duration");return e>0&&e<=this.prop("currentTime")?this.options.loop?this.replay():this.pause():this.vidElem.vjs_play(),this},pause:function(){return this.vidElem.vjs_pause(),this},seekTo:function(e){return this.prop("currentTime",e),this},replay:function(){this.seekTo(0);var e=this;e.prop("paused")&&e.play();var t=setTimeout(function(){e.prop("paused")&&e.play(),_.trigger("track_"+e.vid)},0);k.push(t)},prop:function(e,t){var o=this.vidElem;return 1===arguments.length?o.vjs_getProperty(e):(o.vjs_setProperty(e,t),this)}};var C={constructor:t,addAttrs:function(e){for(var t in e)e.hasOwnProperty(t)&&e[t]&&(this.vidElem[t]=e[t])},createPlayer:function(){this.mode="video",this.$wrap.css("background-color",this.options.bgcolor),this.$wrap.find("#"+this.vid).remove();var e=$("<video />");this.vidElem=e[0],this.addAttrs({controls:!1,id:this.vid,name:this.vid,src:this.options.preload?this.options.src:"",preload:this.options.preload,autoplay:this.options.autoplay,muted:this.options.muted}),e.css({width:"100%",height:"100%"}),this.$wrap.prepend(e),this.vidElem.volume=this.options.volume,this._lastVolume=this.options.volume,this.initEvents()},initEvents:function(){var e=this;this.on("ended",function(){if(e.options.loop){var t=setTimeout(function(){e.replay()},100);k.push(t)}}).on("playing",function(){e.__not_first||(e.__not_first=!0,_.trigger("track_"+e.vid))}),this.applyPlayTrack();var t=this.vid,o=document.getElementById(t),n=["canplaythrough","durationchange","playing","play","loadstart","pause","ended","volumechange","click"];$.each(n,function(e,n){$(o).on(n,function(){_.trigger(n+"_"+t)})});for(var i=e.readyCalls,r=null;i.length;)r=i.shift(),r.call(e,e,o);e.readyState="complete"},setSource:function(e){return this.prop("src",e),this},play:function(){this.options.preload||this.prop("currentSrc")||(this.vidElem.src=this.options.src);var e=this.prop("duration");return e>0&&e<=this.prop("currentTime")?this.options.loop?this.replay():this.pause():this.vidElem.play(),this},pause:function(){return this.vidElem.pause(),this},seekTo:function(e){return this.vidElem.currentTime=e,this},replay:function(){this.vidElem.currentTime=0,this.vidElem.play();var e=this,t=setTimeout(function(){e.prop("paused")&&e.play(),_.trigger("track_"+e.vid)},0);k.push(t)},prop:function(e,t){var o=this.vidElem;return 1===arguments.length?"lastVolume"==e?this._lastVolume>0?this._lastVolume:1:o[e]:(o[e]=t,"volume"===e&&(this._lastVolume=o.volume),this)}};t.prototype=$.extend({},e.prototype,C);var S=function(){var e=document.createElement("video"),t="";try{t=e.canPlayType&&e.canPlayType('video/mp4; codecs="avc1.42E01E"').replace(/^no$/,"")}catch(e){}return e=null,!!t}(),F=function(o,n){if(!n||!n.src)throw"option src needed!";var i,r="swf"===n.mode,a=!/mp4$/i.test(n.src+"");return!S||r||a?(i=new e(o,n),i.mode="swf"):(i=new t(o,n),i.mode="video",i.$wrap.on("contextmenu",function(e){e.preventDefault()})),i},N=$.vPlayer=F;return $.fn.vPlayer=function(){return this.each(function(e,t){var o=$(t),n={};n.mode=o.attr("mode"),n.src=o.attr("src"),void 0!==o.attr("loop")&&(n.loop=!0),void 0!==o.attr("preload")&&(n.preload=!0),void 0!==o.attr("autoplay")&&(n.autoplay=!0),void 0!==o.attr("muted")&&(n.muted=!0),void 0!==o.attr("simulatefullscreen")&&(n.simulateFullScreen=!0);var i=o.attr("volume");void 0!==i&&(n.volume=parseFloat(i));var r=o.attr("poster");r&&(n.poster=r);var a=$.trim(o.attr("href"));a&&(n.clickUrl=a);var l=$.trim(o.attr("onurlopen"));l&&(n.clickUrlTrack=l);var s=$.trim(o.attr("onplay"));s&&(n.playTrack=s);var d=$.trim(o.attr("swf"));return d&&(n.swfUrl=d),$.vPlayer(o,n)}),this},F.timers=k,F.onEvent=function(e,t){_.trigger(t+"_"+e)},F.onError=function(e,t){_.trigger("error_"+e,t)},F.onReady=function(e){_.trigger("ready_"+e)},F.debug=function(e){return e?T[e]:T},F.debug.emitter=_,_._trigger=_.trigger,_.trigger=function(e){F.debugMode&&window.console&&console.log(e),_._trigger(e)},F.toggleEventLog=function(){F.debugMode=!F.debugMode},N});
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(global.vPlayer = factory());
+}(this, (function () { 'use strict';
+
+var config = {
+  "swf": "//s5.ssl.qhres.com/static/fca83421739b4383.swf",
+  "sprite": "//p5.ssl.qhimg.com/t0154249c11cb1852d0.png",
+  "loading": "//p5.ssl.qhimg.com/t017699817e7d9bb0fd.gif"
+};
+
+var loadCSS$1 = function (cssText) {
+  var style = document.createElement('style');
+  style.rel = 'stylesheet';
+  style.type = 'text/css';
+
+  if (style.styleSheet) {
+    style.styleSheet.cssText = cssText;
+  } else {
+    style.appendChild(document.createTextNode(cssText));
+  }
+  document.getElementsByTagName('head')[0].appendChild(style);
+};
+
+var styles = ".body__hidden{overflow:hidden !important}.video-wrapper{position:relative;width:100%;height:100%;background:#000;overflow:hidden !important;-webkit-transform:translate3d(0, 0, 0);transform:translate3d(0, 0, 0)}.video-wrapper__fullscreen{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;z-index:99999999999}.video-wrapper>video{display:block;width:100%;height:100%;outline:0 !important}.video-control{position:absolute;bottom:-40px;left:0;right:0;width:100%;height:30px;z-index:888;padding-top:10px;background:url(__sprite) 0 -190px;_padding-top:7px;_background-position:0 -195px}.video-control>.video-progress{position:absolute;left:0;right:0;z-index:999;top:4px;width:100%;height:12px;overflow:hidden;zoom:1}.video-progress .v-p-total{position:absolute;left:0;right:0;top:5px;height:2px;width:100%;background-color:#555}.video-progress .v-p-total .v-p-cur{float:left;height:2px;width:0;background-color:#2b2b2b}.video-progress .v-p-total .v-p-ctrl{position:absolute;left:0;top:-5px;width:12px;height:12px;background:url(__sprite) 0 -20px no-repeat}.video-time,.video-volume,.video-expand{float:right}.video-control-play{float:left;overflow:hidden;padding:8px 10px 7px 20px}.video-time{display:none;float:left;font-size:12px;color:#fff;font-family:Microsoft Yahei;padding:0;line-height:30px}.video-control-play-btn:hover,.video-volume-btn:hover,.video-expand-btn:hover{opacity:.8;filter:alpha(opacity=80)}.video-control-play-btn{width:14px;height:15px;background:url(__sprite) no-repeat}.video-control-play-btn__paused{background-position:-20px -20px}.video-control-play-btn__playing{background-position:-40px -20px}.video-expand{padding:7px 20px 7px 16px}.video-expand-btn{width:18px;height:16px}.video-expand-btn__normal{background:url(__sprite) -60px -20px no-repeat}.video-volume{padding:7px 2px 7px 0}.video-volume-btn{display:block;width:19px;height:16px;background:url(__sprite) 0 0 no-repeat}.video-volume-btn__muted{background-position:0 0}.video-volume-btn__1{background-position:-20px 0}.video-volume-btn__2{background-position:-40px 0}.video-volume-btn__3{background-position:-60px 0}.video-volume-ctrl{float:right;width:30%;max-width:60px;min-width:40px;height:30px;position:relative}.volume-total{position:absolute;left:0;right:0;top:14px;height:2px;background-color:#fff}.volume-cur{float:left;height:2px;width:0;background-color:#fff}.volume-ctrl{position:absolute;left:0;top:-5px;width:12px;height:12px;background:url(__sprite) 0 -20px no-repeat}.vplayer-poster,.vplayer-poster img{position:absolute;left:0;right:0;top:0;bottom:0;width:100%;height:100%;z-index:999}.vplayer-loading,.vplayer-play-btn{width:70px;height:70px;position:absolute;left:50%;top:50%;margin-top:-35px;margin-left:-35px;cursor:pointer;z-index:1000}.vplayer-play-btn{background:url(__sprite) 0 -40px no-repeat}.vplayer-play-btn:hover{background-position:-80px -40px}.vplayer-play-pause{background-position:0 -120px !important}.vplayer-play-pause:hover{opacity:.8;filter:alpha(opacity=80)}.flash-tip{display:none;position:absolute;top:0;right:0;bottom:0;left:0;z-index:1111;background:#424242}.flash-tip a{position:absolute;top:0;right:0;bottom:0;left:0;height:40px;line-height:40px;text-align:center;color:#ffff;overflow:hidden;text-overflow:ellipsis;margin:auto;text-decoration:none}\n";
+
+var styles$1 = {
+	__def: styles
+};
+
+var player$2 = " <div class=\"video-wrapper\"> <div class=\"video-control\"> <div class=\"video-progress\"> <div class=\"v-p-total\"> <div class=\"ctrl v-p-ctrl\"></div> <div class=\"v-p-cur\"></div> </div> </div> <div style=\"overflow: hidden\"> <div class=\"video-control-play\"> <div class=\"video-control-play-btn video-control-play-btn__paused\"></div> </div> <div class=\"video-time\">00:00/00:00</div> <div class=\"video-expand\"> <div class=\"video-expand-btn video-expand-btn__normal\"></div> </div> <div class=\"video-volume-ctrl\"> <div class=\"volume-total\"> <div class=\"ctrl volume-ctrl\"></div> <div class=\"volume-cur\"></div> </div> </div> <div class=\"video-volume\"> <div class=\"video-volume-btn video-volume-btn__muted\"></div> </div> </div> </div> <div class=\"vplayer-poster\"> <img alt=\"\"> </div> <div class=\"vplayer-play-btn\"></div> <img alt=\"\" class=\"vplayer-loading\" style=\"display: none\"> <div class=\"flash-tip\"> <a href=\"http://www.adobe.com/go/getflashplayer\" target=\"_blank\" title=\"升级Flash插件\"> 点击升级 Flash 插件 </a> </div> </div>";
+
+var player$3 = {
+	__def: player$2
+};
+
+var w = window;
+var timers$2 = w.So && w.So.page && w.So.page.timer || [];
+
+var timers$1 = timers$2;
+
+/*!    SWFObject v2.3.20130521 <http://github.com/swfobject/swfobject>
+    is released under the MIT License <http://www.opensource.org/licenses/mit-license.php>
+*/
+
+/* global ActiveXObject: false */
+/* jshint undef: true, unused: false */
+/*jshint -W018 */
+var swfobject$1 = function() {
+
+    var UNDEF = "undefined",
+        OBJECT = "object",
+        SHOCKWAVE_FLASH = "Shockwave Flash",
+        SHOCKWAVE_FLASH_AX = "ShockwaveFlash.ShockwaveFlash",
+        FLASH_MIME_TYPE = "application/x-shockwave-flash",
+        EXPRESS_INSTALL_ID = "SWFObjectExprInst",
+        ON_READY_STATE_CHANGE = "onreadystatechange",
+
+        win = window,
+        doc = document,
+        nav = navigator,
+
+        plugin = false,
+        domLoadFnArr = [],
+        regObjArr = [],
+        objIdArr = [],
+        listenersArr = [],
+        storedFbContent,
+        storedFbContentId,
+        storedCallbackFn,
+        storedCallbackObj,
+        isDomLoaded = false,
+        isExpressInstallActive = false,
+        dynamicStylesheet,
+        dynamicStylesheetMedia,
+        autoHideShow = true,
+        encodeURIEnabled = false,
+
+        /* Centralized function for browser feature detection
+        - User agent string detection is only used when no good alternative is possible
+        - Is executed directly for optimal performance
+    */
+        ua = function() {
+            var w3cdom = typeof doc.getElementById !== UNDEF && typeof doc.getElementsByTagName !== UNDEF && typeof doc.createElement !== UNDEF,
+                u = nav.userAgent.toLowerCase(),
+                p = nav.platform.toLowerCase(),
+                windows = p ? /win/.test(p) : /win/.test(u),
+                mac = p ? /mac/.test(p) : /mac/.test(u),
+                webkit = /webkit/.test(u) ? parseFloat(u.replace(/^.*webkit\/(\d+(\.\d+)?).*$/, "$1")) : false, // returns either the webkit version or false if not webkit
+                ie = nav.appName === "Microsoft Internet Explorer",
+                playerVersion = [0, 0, 0],
+                d = null;
+            if (typeof nav.plugins !== UNDEF && typeof nav.plugins[SHOCKWAVE_FLASH] === OBJECT) {
+                d = nav.plugins[SHOCKWAVE_FLASH].description;
+                // nav.mimeTypes["application/x-shockwave-flash"].enabledPlugin indicates whether plug-ins are enabled or disabled in Safari 3+
+                if (d && (typeof nav.mimeTypes !== UNDEF && nav.mimeTypes[FLASH_MIME_TYPE] && nav.mimeTypes[FLASH_MIME_TYPE].enabledPlugin)) {
+                    plugin = true;
+                    ie = false; // cascaded feature detection for Internet Explorer
+                    d = d.replace(/^.*\s+(\S+\s+\S+$)/, "$1");
+                    playerVersion[0] = toInt(d.replace(/^(.*)\..*$/, "$1"));
+                    playerVersion[1] = toInt(d.replace(/^.*\.(.*)\s.*$/, "$1"));
+                    playerVersion[2] = /[a-zA-Z]/.test(d) ? toInt(d.replace(/^.*[a-zA-Z]+(.*)$/, "$1")) : 0;
+                }
+            } else if (typeof win.ActiveXObject !== UNDEF) {
+                try {
+                    var a = new ActiveXObject(SHOCKWAVE_FLASH_AX);
+                    if (a) { // a will return null when ActiveX is disabled
+                        d = a.GetVariable("$version");
+                        if (d) {
+                            ie = true; // cascaded feature detection for Internet Explorer
+                            d = d.split(" ")[1].split(",");
+                            playerVersion = [toInt(d[0]), toInt(d[1]), toInt(d[2])];
+                        }
+                    }
+                } catch (e) {}
+            }
+            return {
+                w3: w3cdom,
+                pv: playerVersion,
+                wk: webkit,
+                ie: ie,
+                win: windows,
+                mac: mac
+            };
+        }(),
+
+        /* Cross-browser onDomLoad
+        - Will fire an event as soon as the DOM of a web page is loaded
+        - Internet Explorer workaround based on Diego Perini's solution: http://javascript.nwbox.com/IEContentLoaded/
+        - Regular onload serves as fallback
+    */
+        onDomLoad = function() {
+            if (!ua.w3) {
+                return;
+            }
+            if ((typeof doc.readyState !== UNDEF && (doc.readyState === "complete" || doc.readyState === "interactive")) || (typeof doc.readyState === UNDEF && (doc.getElementsByTagName("body")[0] || doc.body))) { // function is fired after onload, e.g. when script is inserted dynamically
+                callDomLoadFunctions();
+            }
+            if (!isDomLoaded) {
+                if (typeof doc.addEventListener !== UNDEF) {
+                    doc.addEventListener("DOMContentLoaded", callDomLoadFunctions, false);
+                }
+                if (ua.ie) {
+                    doc.attachEvent(ON_READY_STATE_CHANGE, function detach() {
+                        if (doc.readyState === "complete") {
+                            doc.detachEvent(ON_READY_STATE_CHANGE, detach);
+                            callDomLoadFunctions();
+                        }
+                    });
+                    if (win == top) { // if not inside an iframe
+                        (function checkDomLoadedIE() {
+                            if (isDomLoaded) {
+                                return;
+                            }
+                            try {
+                                doc.documentElement.doScroll("left");
+                            } catch (e) {
+                                var _t = setTimeout(checkDomLoadedIE, 0);
+                                timers$1.push(_t);
+                                return;
+                            }
+                            callDomLoadFunctions();
+                        }());
+                    }
+                }
+                if (ua.wk) {
+                    (function checkDomLoadedWK() {
+                        if (isDomLoaded) {
+                            return;
+                        }
+                        if (!/loaded|complete/.test(doc.readyState)) {
+                            var _t = setTimeout(checkDomLoadedWK, 0);
+                            timers$1.push(_t);
+                            return;
+                        }
+                        callDomLoadFunctions();
+                    }());
+                }
+            }
+        }();
+
+    function callDomLoadFunctions() {
+        if (isDomLoaded || !document.getElementsByTagName("body")[0]) {
+            return;
+        }
+        try { // test if we can really add/remove elements to/from the DOM; we don't want to fire it too early
+            var t, span = createElement("span");
+            span.style.display = "none"; //hide the span in case someone has styled spans via CSS
+            t = doc.getElementsByTagName("body")[0].appendChild(span);
+            t.parentNode.removeChild(t);
+            t = null; //clear the variables
+            span = null;
+        } catch (e) {
+            return;
+        }
+        isDomLoaded = true;
+        var dl = domLoadFnArr.length;
+        for (var i = 0; i < dl; i++) {
+            domLoadFnArr[i]();
+        }
+    }
+
+    function addDomLoadEvent(fn) {
+        if (isDomLoaded) {
+            fn();
+        } else {
+            domLoadFnArr[domLoadFnArr.length] = fn; // Array.push() is only available in IE5.5+
+        }
+    }
+
+    /* Cross-browser onload
+        - Based on James Edwards' solution: http://brothercake.com/site/resources/scripts/onload/
+        - Will fire an event as soon as a web page including all of its assets are loaded
+     */
+    function addLoadEvent(fn) {
+        if (typeof win.addEventListener !== UNDEF) {
+            win.addEventListener("load", fn, false);
+        } else if (typeof doc.addEventListener !== UNDEF) {
+            doc.addEventListener("load", fn, false);
+        } else if (typeof win.attachEvent !== UNDEF) {
+            addListener(win, "onload", fn);
+        } else if (typeof win.onload === "function") {
+            var fnOld = win.onload;
+            win.onload = function() {
+                fnOld();
+                fn();
+            };
+        } else {
+            win.onload = fn;
+        }
+    }
+
+    /* Detect the Flash Player version for non-Internet Explorer browsers
+        - Detecting the plug-in version via the object element is more precise than using the plugins collection item's description:
+          a. Both release and build numbers can be detected
+          b. Avoid wrong descriptions by corrupt installers provided by Adobe
+          c. Avoid wrong descriptions by multiple Flash Player entries in the plugin Array, caused by incorrect browser imports
+        - Disadvantage of this method is that it depends on the availability of the DOM, while the plugins collection is immediately available
+    */
+    function testPlayerVersion() {
+        var b = doc.getElementsByTagName("body")[0];
+        var o = createElement(OBJECT);
+        o.setAttribute("style", "visibility: hidden;");
+        o.setAttribute("type", FLASH_MIME_TYPE);
+        var t = b.appendChild(o);
+        if (t) {
+            var counter = 0;
+            (function checkGetVariable() {
+                if (typeof t.GetVariable !== UNDEF) {
+                    try {
+                        var d = t.GetVariable("$version");
+                        if (d) {
+                            d = d.split(" ")[1].split(",");
+                            ua.pv = [toInt(d[0]), toInt(d[1]), toInt(d[2])];
+                        }
+                    } catch (e) {
+                        //t.GetVariable("$version") is known to fail in Flash Player 8 on Firefox
+                        //If this error is encountered, assume FP8 or lower. Time to upgrade.
+                        ua.pv = [8, 0, 0];
+                    }
+                } else if (counter < 10) {
+                    counter++;
+                    var _t = setTimeout(checkGetVariable, 10);
+                    timers$1.push(_t);
+                    return;
+                }
+                b.removeChild(o);
+                t = null;
+                matchVersions();
+            }());
+        } else {
+            matchVersions();
+        }
+    }
+
+    /* Perform Flash Player and SWF version matching; static publishing only
+     */
+    function matchVersions() {
+        var rl = regObjArr.length;
+        if (rl > 0) {
+            for (var i = 0; i < rl; i++) { // for each registered object element
+                var id = regObjArr[i].id;
+                var cb = regObjArr[i].callbackFn;
+                var cbObj = {
+                    success: false,
+                    id: id
+                };
+                if (ua.pv[0] > 0) {
+                    var obj = getElementById(id);
+                    if (obj) {
+                        if (hasPlayerVersion(regObjArr[i].swfVersion) && !(ua.wk && ua.wk < 312)) { // Flash Player version >= published SWF version: Houston, we have a match!
+                            setVisibility(id, true);
+                            if (cb) {
+                                cbObj.success = true;
+                                cbObj.ref = getObjectById(id);
+                                cbObj.id = id;
+                                cb(cbObj);
+                            }
+                        } else if (regObjArr[i].expressInstall && canExpressInstall()) { // show the Adobe Express Install dialog if set by the web page author and if supported
+                            var att = {};
+                            att.data = regObjArr[i].expressInstall;
+                            att.width = obj.getAttribute("width") || "0";
+                            att.height = obj.getAttribute("height") || "0";
+                            if (obj.getAttribute("class")) {
+                                att.styleclass = obj.getAttribute("class");
+                            }
+                            if (obj.getAttribute("align")) {
+                                att.align = obj.getAttribute("align");
+                            }
+                            // parse HTML object param element's name-value pairs
+                            var par = {};
+                            var p = obj.getElementsByTagName("param");
+                            var pl = p.length;
+                            for (var j = 0; j < pl; j++) {
+                                if (p[j].getAttribute("name").toLowerCase() !== "movie") {
+                                    par[p[j].getAttribute("name")] = p[j].getAttribute("value");
+                                }
+                            }
+                            showExpressInstall(att, par, id, cb);
+                        } else { // Flash Player and SWF version mismatch or an older Webkit engine that ignores the HTML object element's nested param elements: display fallback content instead of SWF
+                            displayFbContent(obj);
+                            if (cb) {
+                                cb(cbObj);
+                            }
+                        }
+                    }
+                } else { // if no Flash Player is installed or the fp version cannot be detected we let the HTML object element do its job (either show a SWF or fallback content)
+                    setVisibility(id, true);
+                    if (cb) {
+                        var o = getObjectById(id); // test whether there is an HTML object element or not
+                        if (o && typeof o.SetVariable !== UNDEF) {
+                            cbObj.success = true;
+                            cbObj.ref = o;
+                            cbObj.id = o.id;
+                        }
+                        cb(cbObj);
+                    }
+                }
+            }
+        }
+    }
+
+    /* Main function
+        - Will preferably execute onDomLoad, otherwise onload (as a fallback)
+    */
+    domLoadFnArr[0] = function() {
+        if (plugin) {
+            testPlayerVersion();
+        } else {
+            matchVersions();
+        }
+    };
+
+    function getObjectById(objectIdStr) {
+        var r = null,
+            o = getElementById(objectIdStr);
+
+        if (o && o.nodeName.toUpperCase() === "OBJECT") {
+            //If targeted object is valid Flash file
+            if (typeof o.SetVariable !== UNDEF) {
+                r = o;
+            } else {
+                //If SetVariable is not working on targeted object but a nested object is
+                //available, assume classic nested object markup. Return nested object.
+
+                //If SetVariable is not working on targeted object and there is no nested object,
+                //return the original object anyway. This is probably new simplified markup.
+
+                r = o.getElementsByTagName(OBJECT)[0] || o;
+            }
+        }
+
+        return r;
+    }
+
+    /* Requirements for Adobe Express Install
+        - only one instance can be active at a time
+        - fp 6.0.65 or higher
+        - Win/Mac OS only
+        - no Webkit engines older than version 312
+    */
+    function canExpressInstall() {
+        return !isExpressInstallActive && hasPlayerVersion("6.0.65") && (ua.win || ua.mac) && !(ua.wk && ua.wk < 312);
+    }
+
+    /* Show the Adobe Express Install dialog
+        - Reference: http://www.adobe.com/cfusion/knowledgebase/index.cfm?id=6a253b75
+    */
+    function showExpressInstall(att, par, replaceElemIdStr, callbackFn) {
+
+        var obj = getElementById(replaceElemIdStr);
+
+        //Ensure that replaceElemIdStr is really a string and not an element
+        replaceElemIdStr = getId(replaceElemIdStr);
+
+        isExpressInstallActive = true;
+        storedCallbackFn = callbackFn || null;
+        storedCallbackObj = {
+            success: false,
+            id: replaceElemIdStr
+        };
+
+        if (obj) {
+            if (obj.nodeName.toUpperCase() === "OBJECT") { // static publishing
+                storedFbContent = abstractFbContent(obj);
+                storedFbContentId = null;
+            } else { // dynamic publishing
+                storedFbContent = obj;
+                storedFbContentId = replaceElemIdStr;
+            }
+            att.id = EXPRESS_INSTALL_ID;
+            if (typeof att.width === UNDEF || (!/%$/.test(att.width) && toInt(att.width) < 310)) {
+                att.width = "310";
+            }
+            if (typeof att.height === UNDEF || (!/%$/.test(att.height) && toInt(att.height) < 137)) {
+                att.height = "137";
+            }
+            var pt = ua.ie ? "ActiveX" : "PlugIn",
+                fv = "MMredirectURL=" + encodeURIComponent(win.location.toString().replace(/&/g, "%26")) + "&MMplayerType=" + pt + "&MMdoctitle=" + encodeURIComponent(doc.title.slice(0, 47) + " - Flash Player Installation");
+            if (typeof par.flashvars !== UNDEF) {
+                par.flashvars += "&" + fv;
+            } else {
+                par.flashvars = fv;
+            }
+            // IE only: when a SWF is loading (AND: not available in cache) wait for the readyState of the object element to become 4 before removing it,
+            // because you cannot properly cancel a loading SWF file without breaking browser load references, also obj.onreadystatechange doesn't work
+            if (ua.ie && obj.readyState != 4) {
+                var newObj = createElement("div");
+                replaceElemIdStr += "SWFObjectNew";
+                newObj.setAttribute("id", replaceElemIdStr);
+                obj.parentNode.insertBefore(newObj, obj); // insert placeholder div that will be replaced by the object element that loads expressinstall.swf
+                obj.style.display = "none";
+                removeSWF(obj); //removeSWF accepts elements now
+            }
+            createSWF(att, par, replaceElemIdStr);
+        }
+    }
+
+    /* Functions to abstract and display fallback content
+     */
+    function displayFbContent(obj) {
+        if (ua.ie && obj.readyState != 4) {
+            // IE only: when a SWF is loading (AND: not available in cache) wait for the readyState of the object element to become 4 before removing it,
+            // because you cannot properly cancel a loading SWF file without breaking browser load references, also obj.onreadystatechange doesn't work
+            obj.style.display = "none";
+            var el = createElement("div");
+            obj.parentNode.insertBefore(el, obj); // insert placeholder div that will be replaced by the fallback content
+            el.parentNode.replaceChild(abstractFbContent(obj), el);
+            removeSWF(obj); //removeSWF accepts elements now
+        } else {
+            obj.parentNode.replaceChild(abstractFbContent(obj), obj);
+        }
+    }
+
+    function abstractFbContent(obj) {
+        var ac = createElement("div");
+        if (ua.win && ua.ie) {
+            ac.innerHTML = obj.innerHTML;
+        } else {
+            var nestedObj = obj.getElementsByTagName(OBJECT)[0];
+            if (nestedObj) {
+                var c = nestedObj.childNodes;
+                if (c) {
+                    var cl = c.length;
+                    for (var i = 0; i < cl; i++) {
+                        if (!(c[i].nodeType == 1 && c[i].nodeName === "PARAM") && !(c[i].nodeType == 8)) {
+                            ac.appendChild(c[i].cloneNode(true));
+                        }
+                    }
+                }
+            }
+        }
+        return ac;
+    }
+
+    function createIeObject(url, paramStr) {
+        var div = createElement("div");
+        div.innerHTML = "<object classid='clsid:D27CDB6E-AE6D-11cf-96B8-444553540000'><param name='movie' value='" + url + "'>" + paramStr + "</object>";
+        return div.firstChild;
+    }
+
+    /* Cross-browser dynamic SWF creation
+     */
+    function createSWF(attObj, parObj, id) {
+        var r, el = getElementById(id);
+        id = getId(id); // ensure id is truly an ID and not an element
+
+        if (ua.wk && ua.wk < 312) {
+            return r;
+        }
+
+        if (el) {
+            var o = (ua.ie) ? createElement("div") : createElement(OBJECT),
+                attr,
+                attrLower,
+                param;
+
+            if (typeof attObj.id === UNDEF) { // if no 'id' is defined for the object element, it will inherit the 'id' from the fallback content
+                attObj.id = id;
+            }
+
+            //Add params
+            for (param in parObj) {
+                //filter out prototype additions from other potential libraries and IE specific param element
+                if (parObj.hasOwnProperty(param) && param.toLowerCase() !== "movie") {
+                    createObjParam(o, param, parObj[param]);
+                }
+            }
+
+            //Create IE object, complete with param nodes
+            if (ua.ie) {
+                o = createIeObject(attObj.data, o.innerHTML);
+            }
+
+            //Add attributes to object
+            for (attr in attObj) {
+                if (attObj.hasOwnProperty(attr)) { // filter out prototype additions from other potential libraries
+                    attrLower = attr.toLowerCase();
+
+                    // 'class' is an ECMA4 reserved keyword
+                    if (attrLower === "styleclass") {
+                        o.setAttribute("class", attObj[attr]);
+                    } else if (attrLower !== "classid" && attrLower !== "data") {
+                        o.setAttribute(attr, attObj[attr]);
+                    }
+                }
+            }
+
+            if (ua.ie) {
+                objIdArr[objIdArr.length] = attObj.id; // stored to fix object 'leaks' on unload (dynamic publishing only)
+            } else {
+                o.setAttribute("type", FLASH_MIME_TYPE);
+                o.setAttribute("data", attObj.data);
+            }
+
+            el.parentNode.replaceChild(o, el);
+            r = o;
+        }
+
+        return r;
+    }
+
+    function createObjParam(el, pName, pValue) {
+        var p = createElement("param");
+        p.setAttribute("name", pName);
+        p.setAttribute("value", pValue);
+        el.appendChild(p);
+    }
+
+    /* Cross-browser SWF removal
+        - Especially needed to safely and completely remove a SWF in Internet Explorer
+    */
+    function removeSWF(id) {
+        var obj = getElementById(id);
+        if (obj && obj.nodeName.toUpperCase() === "OBJECT") {
+            if (ua.ie) {
+                obj.style.display = "none";
+                (function removeSWFInIE() {
+                    if (obj.readyState == 4) {
+                        //This step prevents memory leaks in Internet Explorer
+                        for (var i in obj) {
+                            if (typeof obj[i] === "function") {
+                                obj[i] = null;
+                            }
+                        }
+                        obj.parentNode.removeChild(obj);
+                    } else {
+                        var _t = setTimeout(removeSWFInIE, 10);
+                        timers$1.push(_t);
+                    }
+                }());
+            } else {
+                obj.parentNode.removeChild(obj);
+            }
+        }
+    }
+
+    function isElement(id) {
+        return (id && id.nodeType && id.nodeType === 1);
+    }
+
+    function getId(thing) {
+        return (isElement(thing)) ? thing.id : thing;
+    }
+
+    /* Functions to optimize JavaScript compression
+     */
+    function getElementById(id) {
+
+        //Allow users to pass an element OR an element's ID
+        if (isElement(id)) {
+            return id;
+        }
+
+        var el = null;
+        try {
+            el = doc.getElementById(id);
+        } catch (e) {}
+        return el;
+    }
+
+    function createElement(el) {
+        return doc.createElement(el);
+    }
+
+    //To aid compression; replaces 14 instances of pareseInt with radix
+    function toInt(str) {
+        return parseInt(str, 10);
+    }
+
+    /* Updated attachEvent function for Internet Explorer
+        - Stores attachEvent information in an Array, so on unload the detachEvent functions can be called to avoid memory leaks
+    */
+    function addListener(target, eventType, fn) {
+        target.attachEvent(eventType, fn);
+        listenersArr[listenersArr.length] = [target, eventType, fn];
+    }
+
+    /* Flash Player and SWF content version matching
+     */
+    function hasPlayerVersion(rv) {
+        rv += ""; //Coerce number to string, if needed.
+        var pv = ua.pv,
+            v = rv.split(".");
+        v[0] = toInt(v[0]);
+        v[1] = toInt(v[1]) || 0; // supports short notation, e.g. "9" instead of "9.0.0"
+        v[2] = toInt(v[2]) || 0;
+        return (pv[0] > v[0] || (pv[0] == v[0] && pv[1] > v[1]) || (pv[0] == v[0] && pv[1] == v[1] && pv[2] >= v[2])) ? true : false;
+    }
+
+    /* Cross-browser dynamic CSS creation
+        - Based on Bobby van der Sluis' solution: http://www.bobbyvandersluis.com/articles/dynamicCSS.php
+    */
+    function createCSS(sel, decl, media, newStyle) {
+        var h = doc.getElementsByTagName("head")[0];
+        if (!h) {
+            return;
+        } // to also support badly authored HTML pages that lack a head element
+        var m = (typeof media === "string") ? media : "screen";
+        if (newStyle) {
+            dynamicStylesheet = null;
+            dynamicStylesheetMedia = null;
+        }
+        if (!dynamicStylesheet || dynamicStylesheetMedia != m) {
+            // create dynamic stylesheet + get a global reference to it
+            var s = createElement("style");
+            s.setAttribute("type", "text/css");
+            s.setAttribute("media", m);
+            dynamicStylesheet = h.appendChild(s);
+            if (ua.ie && typeof doc.styleSheets !== UNDEF && doc.styleSheets.length > 0) {
+                dynamicStylesheet = doc.styleSheets[doc.styleSheets.length - 1];
+            }
+            dynamicStylesheetMedia = m;
+        }
+        // add style rule
+        if (dynamicStylesheet) {
+            if (typeof dynamicStylesheet.addRule !== UNDEF) {
+                dynamicStylesheet.addRule(sel, decl);
+            } else if (typeof doc.createTextNode !== UNDEF) {
+                dynamicStylesheet.appendChild(doc.createTextNode(sel + " {" + decl + "}"));
+            }
+        }
+    }
+
+    function setVisibility(id, isVisible) {
+        if (!autoHideShow) {
+            return;
+        }
+        var v = isVisible ? "visible" : "hidden",
+            el = getElementById(id);
+        if (isDomLoaded && el) {
+            el.style.visibility = v;
+        } else if (typeof id === "string") {
+            createCSS("#" + id, "visibility:" + v);
+        }
+    }
+
+    /* Filter to avoid XSS attacks
+     */
+    function urlEncodeIfNecessary(s) {
+        var regex = /[\\\"<>\.;]/;
+        var hasBadChars = regex.exec(s) !== null;
+        return hasBadChars && typeof encodeURIComponent !== UNDEF ? encodeURIComponent(s) : s;
+    }
+
+    /* Release memory to avoid memory leaks caused by closures, fix hanging audio/video threads and force open sockets/NetConnections to disconnect (Internet Explorer only)
+     */
+    var cleanup = function() {
+        if (ua.ie) {
+            window.attachEvent("onunload", function() {
+                // remove listeners to avoid memory leaks
+                var ll = listenersArr.length;
+                for (var i = 0; i < ll; i++) {
+                    listenersArr[i][0].detachEvent(listenersArr[i][1], listenersArr[i][2]);
+                }
+                // cleanup dynamically embedded objects to fix audio/video threads and force open sockets and NetConnections to disconnect
+                var il = objIdArr.length;
+                for (var j = 0; j < il; j++) {
+                    removeSWF(objIdArr[j]);
+                }
+                // cleanup library's main closures to avoid memory leaks
+                for (var k in ua) {
+                    ua[k] = null;
+                }
+                ua = null;
+                for (var l in swfobject$1) {
+                    swfobject$1[l] = null;
+                }
+                swfobject$1 = null;
+            });
+        }
+    }();
+
+    return {
+        /* Public API
+            - Reference: http://code.google.com/p/swfobject/wiki/documentation
+        */
+        registerObject: function(objectIdStr, swfVersionStr, xiSwfUrlStr, callbackFn) {
+            if (ua.w3 && objectIdStr && swfVersionStr) {
+                var regObj = {};
+                regObj.id = objectIdStr;
+                regObj.swfVersion = swfVersionStr;
+                regObj.expressInstall = xiSwfUrlStr;
+                regObj.callbackFn = callbackFn;
+                regObjArr[regObjArr.length] = regObj;
+                setVisibility(objectIdStr, false);
+            } else if (callbackFn) {
+                callbackFn({
+                    success: false,
+                    id: objectIdStr
+                });
+            }
+        },
+
+        getObjectById: function(objectIdStr) {
+            if (ua.w3) {
+                return getObjectById(objectIdStr);
+            }
+        },
+
+        embedSWF: function(swfUrlStr, replaceElemIdStr, widthStr, heightStr, swfVersionStr, xiSwfUrlStr, flashvarsObj, parObj, attObj, callbackFn) {
+
+            var id = getId(replaceElemIdStr),
+                callbackObj = {
+                    success: false,
+                    id: id
+                };
+
+            if (ua.w3 && !(ua.wk && ua.wk < 312) && swfUrlStr && replaceElemIdStr && widthStr && heightStr && swfVersionStr) {
+                setVisibility(id, false);
+                addDomLoadEvent(function() {
+                    widthStr += ""; // auto-convert to string
+                    heightStr += "";
+                    var att = {};
+                    if (attObj && typeof attObj === OBJECT) {
+                        for (var i in attObj) { // copy object to avoid the use of references, because web authors often reuse attObj for multiple SWFs
+                            att[i] = attObj[i];
+                        }
+                    }
+                    att.data = swfUrlStr;
+                    att.width = widthStr;
+                    att.height = heightStr;
+                    var par = {};
+                    if (parObj && typeof parObj === OBJECT) {
+                        for (var j in parObj) { // copy object to avoid the use of references, because web authors often reuse parObj for multiple SWFs
+                            par[j] = parObj[j];
+                        }
+                    }
+                    if (flashvarsObj && typeof flashvarsObj === OBJECT) {
+                        for (var k in flashvarsObj) { // copy object to avoid the use of references, because web authors often reuse flashvarsObj for multiple SWFs
+                            if (flashvarsObj.hasOwnProperty(k)) {
+
+                                var key = (encodeURIEnabled) ? encodeURIComponent(k) : k,
+                                    value = (encodeURIEnabled) ? encodeURIComponent(flashvarsObj[k]) : flashvarsObj[k];
+
+                                if (typeof par.flashvars !== UNDEF) {
+                                    par.flashvars += "&" + key + "=" + value;
+                                } else {
+                                    par.flashvars = key + "=" + value;
+                                }
+
+                            }
+                        }
+                    }
+                    if (hasPlayerVersion(swfVersionStr)) { // create SWF
+                        var obj = createSWF(att, par, replaceElemIdStr);
+                        if (att.id == id) {
+                            setVisibility(id, true);
+                        }
+                        callbackObj.success = true;
+                        callbackObj.ref = obj;
+                        callbackObj.id = obj.id;
+                    } else if (xiSwfUrlStr && canExpressInstall()) { // show Adobe Express Install
+                        att.data = xiSwfUrlStr;
+                        showExpressInstall(att, par, replaceElemIdStr, callbackFn);
+                        return;
+                    } else { // show fallback content
+                        setVisibility(id, true);
+                    }
+                    if (callbackFn) {
+                        callbackFn(callbackObj);
+                    }
+                });
+            } else if (callbackFn) {
+                callbackFn(callbackObj);
+            }
+        },
+
+        switchOffAutoHideShow: function() {
+            autoHideShow = false;
+        },
+
+        enableUriEncoding: function(bool) {
+            encodeURIEnabled = (typeof bool === UNDEF) ? true : bool;
+        },
+
+        ua: ua,
+
+        getFlashPlayerVersion: function() {
+            return {
+                major: ua.pv[0],
+                minor: ua.pv[1],
+                release: ua.pv[2]
+            };
+        },
+
+        hasFlashPlayerVersion: hasPlayerVersion,
+
+        createSWF: function(attObj, parObj, replaceElemIdStr) {
+            if (ua.w3) {
+                return createSWF(attObj, parObj, replaceElemIdStr);
+            } else {
+                return undefined;
+            }
+        },
+
+        showExpressInstall: function(att, par, replaceElemIdStr, callbackFn) {
+            if (ua.w3 && canExpressInstall()) {
+                showExpressInstall(att, par, replaceElemIdStr, callbackFn);
+            }
+        },
+
+        removeSWF: function(objElemIdStr) {
+            if (ua.w3) {
+                removeSWF(objElemIdStr);
+            }
+        },
+
+        createCSS: function(selStr, declStr, mediaStr, newStyleBoolean) {
+            if (ua.w3) {
+                createCSS(selStr, declStr, mediaStr, newStyleBoolean);
+            }
+        },
+
+        addDomLoadEvent: addDomLoadEvent,
+
+        addLoadEvent: addLoadEvent,
+
+        getQueryParamValue: function(param) {
+            var q = doc.location.search || doc.location.hash;
+            if (q) {
+                if (/\?/.test(q)) {
+                    q = q.split("?")[1];
+                } // strip question mark
+                if (!param) {
+                    return urlEncodeIfNecessary(q);
+                }
+                var pairs = q.split("&");
+                for (var i = 0; i < pairs.length; i++) {
+                    if (pairs[i].substring(0, pairs[i].indexOf("=")) == param) {
+                        return urlEncodeIfNecessary(pairs[i].substring((pairs[i].indexOf("=") + 1)));
+                    }
+                }
+            }
+            return "";
+        },
+
+        // For internal usage only
+        expressInstallCallback: function() {
+            if (isExpressInstallActive) {
+                var obj = getElementById(EXPRESS_INSTALL_ID);
+                if (obj && storedFbContent) {
+                    obj.parentNode.replaceChild(storedFbContent, obj);
+                    if (storedFbContentId) {
+                        setVisibility(storedFbContentId, true);
+                        if (ua.ie) {
+                            storedFbContent.style.display = "block";
+                        }
+                    }
+                    if (storedCallbackFn) {
+                        storedCallbackFn(storedCallbackObj);
+                    }
+                }
+                isExpressInstallActive = false;
+            }
+        },
+
+        version: "2.3"
+
+    };
+}(); 
+
+var swfobject_1 = swfobject$1;
+
+function createCommonjsModule(fn, module) {
+	return module = { exports: {} }, fn(module, module.exports), module.exports;
+}
+
+var screenfull$1 = createCommonjsModule(function (module) {
+(function () {
+    'use strict';
+
+    var isCommonjs = 'object' !== 'undefined' && module.exports;
+    var keyboardAllowed = typeof Element !== 'undefined' && 'ALLOW_KEYBOARD_INPUT' in Element;
+
+    var fn = (function () {
+        var val;
+        var valLength;
+
+        var fnMap = [
+            [
+                'requestFullscreen',
+                'exitFullscreen',
+                'fullscreenElement',
+                'fullscreenEnabled',
+                'fullscreenchange',
+                'fullscreenerror'
+            ],
+            // new WebKit
+            [
+                'webkitRequestFullscreen',
+                'webkitExitFullscreen',
+                'webkitFullscreenElement',
+                'webkitFullscreenEnabled',
+                'webkitfullscreenchange',
+                'webkitfullscreenerror'
+
+            ],
+            // old WebKit (Safari 5.1)
+            [
+                'webkitRequestFullScreen',
+                'webkitCancelFullScreen',
+                'webkitCurrentFullScreenElement',
+                'webkitCancelFullScreen',
+                'webkitfullscreenchange',
+                'webkitfullscreenerror'
+
+            ],
+            [
+                'mozRequestFullScreen',
+                'mozCancelFullScreen',
+                'mozFullScreenElement',
+                'mozFullScreenEnabled',
+                'mozfullscreenchange',
+                'mozfullscreenerror'
+            ],
+            [
+                'msRequestFullscreen',
+                'msExitFullscreen',
+                'msFullscreenElement',
+                'msFullscreenEnabled',
+                'MSFullscreenChange',
+                'MSFullscreenError'
+            ]
+        ];
+
+        var i = 0;
+        var l = fnMap.length;
+        var ret = {};
+
+        for (; i < l; i++) {
+            val = fnMap[i];
+            if (val && val[1] in document) {
+                for (i = 0, valLength = val.length; i < valLength; i++) {
+                    ret[fnMap[0][i]] = val[i];
+                }
+                return ret;
+            }
+        }
+
+        return false;
+    })();
+
+    var screenfull = {
+        request: function (elem) {
+            var request = fn.requestFullscreen;
+
+            elem = elem || document.documentElement;
+
+            // Work around Safari 5.1 bug: reports support for
+            // keyboard in fullscreen even though it doesn't.
+            // Browser sniffing, since the alternative with
+            // setTimeout is even worse.
+            if (/5\.1[\.\d]* Safari/.test(navigator.userAgent)) {
+                elem[request]();
+            } else {
+                elem[request](keyboardAllowed && Element.ALLOW_KEYBOARD_INPUT);
+            }
+        },
+        exit: function () {
+            document[fn.exitFullscreen]();
+        },
+        toggle: function (elem) {
+            if (this.isFullscreen) {
+                this.exit();
+            } else {
+                this.request(elem);
+            }
+        },
+        raw: fn
+    };
+
+    if (!fn) {
+        if (isCommonjs) {
+            module.exports = false;
+        } else {
+            window.screenfull = false;
+        }
+
+        return;
+    }
+
+    if (Object.defineProperties) {
+        Object.defineProperties(screenfull, {
+            isFullscreen: {
+                get: function () {
+                    return Boolean(document[fn.fullscreenElement]);
+                }
+            },
+            element: {
+                enumerable: true,
+                get: function () {
+                    return document[fn.fullscreenElement];
+                }
+            },
+            enabled: {
+                enumerable: true,
+                get: function () {
+                    // Coerce to boolean in case of old WebKit
+                    return Boolean(document[fn.fullscreenEnabled]);
+                }
+            }
+        });
+    }
+
+    if (isCommonjs) {
+        module.exports = screenfull;
+    } else {
+        window.screenfull = screenfull;
+    }
+})();
+});
+
+var screenfull = screenfull$1;
+var timers$4 = timers$2;
+
+var ready = function ready(player, elem) {
+    window['swf_' + elem.id] = player;
+    
+    // 最外层
+    var $document = $(document);
+    var $playerWrap = player.$wrap;
+    var _$ = function (selector) {
+        return $playerWrap.find(selector);
+    };
+
+    $.fn.ctrlSlider = function (option) {
+        var $dur = option.duration;
+        var $cur = option.current;
+        var $ctr = option.controller;
+        var $self = this;
+
+        this.on('mousedown', function (e) {
+            e.preventDefault();
+
+            if (option.onstart) {
+                option.onstart();
+            }
+
+            var left = $self.offset().left;
+            var width = $self.width();
+            
+            var calcPercent = function (e) {
+                var delataX = e.clientX - left;
+                delataX = delataX < 0 ? 0 : (delataX > width ? width : delataX);
+
+                var percent = delataX / $dur.width();
+                $cur.css('width', delataX);
+                $ctr.css('left', (width - $ctr.width()) * percent );
+                return percent;
+            };
+            
+            var mousemove = 'mousemove.' + (+new Date());
+            var update = function (e) {
+                if (option.onchange) {
+                    option.onchange(calcPercent(e));
+                }
+            };
+
+            $document.on(mousemove, throttle(update, 100, true));
+            $document.one('mouseup', function (e) {
+                $document.off(mousemove);
+                if (option.onend) {
+                    option.onend(calcPercent(e));
+                } 
+            });
+            update(e);
+        });
+        return this;
+    };
+
+    // 右键
+    // TODO 添加版权信息
+    // if (player.mode !== 'swf') {
+    //     $playerWrap.on('contextmenu', function () {
+    //         // console.log(e);
+    //     });
+    // }
+
+    //-----------------------------------------------------------------------
+    // 控制面板
+    var $controlPane = _$('.video-control');
+    // 时间显示
+    var $progressTime = $playerWrap.find('.video-time');
+
+    // 是否为静默状态
+    var isSilent = function () {
+        return player.prop('ended') || player.prop('paused') && player.prop('currentTime') === 0;
+    };
+
+    // 显示控件
+    var showControlPane = function () {
+        // 静默状态下不显示
+        if (isSilent()) {
+            return;
+        }
+
+        $controlPane.animate({
+            bottom: 0,
+            opacity: 1
+        }, 300);
+    };
+    // 隐藏控件
+    var hideControlPane = function () {
+        // 暂停情况下 还是需要显示控件
+        if (!isSilent() && player.prop('paused') || isFullScreen()) {
+            return;
+        }
+
+        $controlPane.animate({
+            bottom: -40,
+            opacity: 0
+        }, 200);
+    };
+
+    // 鼠标移入控制切换显示状态
+    $playerWrap
+        .on('mouseenter', showControlPane)
+        .on('mouseleave', hideControlPane);
+
+    // 小容器下面的样式修正
+    // 目前主要做的是隐藏时间
+    var hideProgressTime = true;
+    var updateControlView = function () {
+        hideProgressTime = $controlPane.width() <= 250;
+        if (hideProgressTime) {
+            $progressTime.hide();
+        } else {
+            $progressTime.show();
+        }
+    };
+    updateControlView();
+
+    //--------------------------------------------------------------------------------------
+    // 播放进度相关
+    // 时间格式化
+    var leftPad = function (num) {
+        return '' + (num < 0 ? num : (num < 10 ? '0' + num : num));     
+    };
+    var format = function (seconds) {
+        seconds = Math.round(+seconds);
+        if (isNaN(seconds)) {
+            seconds = 0;
+        }
+        return leftPad(Math.floor(seconds / 60)) + ':' + leftPad(Math.floor(seconds % 60));
+    };
+    // 进度部分
+    var $progressWrap = _$('.video-progress');
+    // 总时长进度条
+    var $progressElem = _$('.v-p-total');
+    // 进度条
+    var $progressPassed = _$('.v-p-cur');
+    // 进度控制按钮
+    var $progressCircle = _$('.v-p-ctrl');
+    // 进度条总长度
+    var PROGRESS_TOTAL = $progressElem.width();
+
+    // window resize 或窗口形状变化时 更新进度条
+    var updateTimeline = function () {
+        // 更新总长度
+        PROGRESS_TOTAL = $progressElem.width();
+    };
+
+    // 更新进度显示
+    var IS_SLIDING = false;
+    var CIRCLE_WIDTH = 0;
+
+    var updateProgressUI = function () {
+        if (IS_SLIDING) {
+            return;
+        }
+
+        CIRCLE_WIDTH = CIRCLE_WIDTH || $progressCircle.width();
+
+        var currTime = player.prop('currentTime');
+        if (isNaN(currTime)) {
+            currTime = 0;
+        }
+
+        var duraTime  = player.prop('duration');
+        if (isNaN(duraTime) || duraTime <= 0) {
+            $progressTime.text('--:--');
+        } else {
+            $progressTime.text(format(currTime) + '/' + format(duraTime));
+        }
+
+        // 更新进度条样式
+        var percent = 0;
+        
+        if (duraTime !== 0) {
+            percent = currTime / duraTime;
+        }
+
+        percent = Math.round(percent * 100) / 100;
+        
+        $progressPassed.css('width', PROGRESS_TOTAL * percent);
+        $progressCircle.css('left',  (PROGRESS_TOTAL - CIRCLE_WIDTH) * percent);
+    };
+
+    $progressWrap.ctrlSlider({
+        duration: $progressElem, 
+        current: $progressPassed,
+        controller: $progressCircle,
+        onstart: function () {
+            IS_SLIDING = true;
+            player.pause();
+        },
+        onchange: function (percent) {
+            var dura = player.prop('duration');
+            percent = percent < 0.95 ? percent : 0.95;
+            player.seekTo(percent * dura);
+            $progressTime.text(format(dura * percent) + '/' + format(dura));
+        },
+        onend: function (percent) {
+            IS_SLIDING = false;
+            percent = percent < 0.95 ? percent : 0.95;
+            player.seekTo(percent * player.prop('duration'));
+            player.play();
+        }
+    });
+
+    // -------------------------------------------------------------------
+    var $videoPlayBtn  = _$('.video-control-play');
+    var $videoPlayIcon = _$('.video-control-play-btn');
+    var CLASS_PLAYING = 'video-control-play-btn__playing';
+
+    var $posterAndPlayBtn = _$('.vplayer-poster, .vplayer-play-btn');
+    var $playBtn = _$('.vplayer-play-btn');
+    var $poster = _$('.vplayer-poster');
+    var $loading = _$('.vplayer-loading');
+    var CLASS_PLAY_PAUSED = 'vplayer-play-pause';
+    var timer = null;
+    
+    $videoPlayBtn.on('click', function () {
+        togglePlay();
+    });
+    
+    $playBtn.on('click', function() {
+        togglePlay();
+        showControlPane();
+    });
+
+    // 开始加载
+    player.on('loadstart', function () {
+        if (player.mode === 'video' && player.options.preload && !player.options.autoplay) {
+            return;
+        }
+        $posterAndPlayBtn.hide();
+        $loading.show();
+    });
+
+    // 假如是直播
+    // 则 duration 会是 0
+    // 判断简单粗暴一点
+    player.on('durationchange', function () {
+        if (player.prop('duration') <= 0) {
+            $progressTime.hide();
+            $progressWrap.hide();
+        } else {
+            if (!hideProgressTime) {
+                $progressTime.show();
+            }
+            $progressWrap.show();
+        }
+    });
+
+    // 可以播放
+    player.on('canplaythrough', function () {
+        clearInterval(timer);
+        updateProgressUI();
+        $videoPlayIcon.addClass(CLASS_PLAYING);
+
+        timer = setInterval(function() {
+            updateProgressUI();
+        }, 30);
+        timers$4.push(timer);
+
+        $posterAndPlayBtn.hide();
+        
+        var _t = setTimeout(function () {
+            $loading.hide();
+        }, 0);
+        timers$4.push(_t);
+    });
+
+    player.on('playing', function () {
+        updateProgressUI();
+        $videoPlayIcon.addClass(CLASS_PLAYING);
+        
+        clearInterval(timer);
+        timer = setInterval(function() {
+            updateProgressUI();
+        }, 30);
+        timers$4.push(timer);
+
+        $posterAndPlayBtn.hide();
+    });
+
+    player.on('pause', function() {
+        clearInterval(timer);
+        updateProgressUI();
+        showControlPane();
+        // 停下来
+        $videoPlayIcon.removeClass(CLASS_PLAYING);
+        $playBtn.addClass(CLASS_PLAY_PAUSED).show();
+    });
+
+    // 结束后回到开头
+    player.on('ended', function () {
+        clearInterval(timer);
+        updateProgressUI();
+        hideControlPane();
+        // 非loop播放的情况下停下来
+        if (!player.options.loop) {
+            $videoPlayIcon.removeClass(CLASS_PLAYING);
+            $posterAndPlayBtn.show();
+            $playBtn.removeClass(CLASS_PLAY_PAUSED);
+        }
+    });
+
+
+    //----------------------------------------------------------
+    var clickUrl = player.clickUrl;
+    var clickTrack = player.clickUrlTrack;
+    if (clickUrl) {
+        $poster.css('cursor', 'pointer');
+    }
+    var openUrl = function () {
+        if (clickUrl && !isFullScreen()) {
+            player.track(clickTrack);
+            window.open(clickUrl);
+        } 
+    };
+    // 跳转打点
+    $poster.on('click', openUrl);
+    player.on('click', function () {
+        player.pause();
+        openUrl();
+    });
+
+    //-----------------------------------------------------------------------
+    // 音量切换
+    var $volumeFull = _$('.volume-total');
+    var $volumeCurr = _$('.volume-cur');
+    var $volumeCtrl = _$('.volume-ctrl');
+    var $muteToggleBtn = _$('.video-volume-btn');
+
+    _$('.video-volume-ctrl').ctrlSlider({
+        duration: $volumeFull, 
+        current: $volumeCurr,
+        controller: $volumeCtrl,
+        onstart: function () {},
+        onchange: function (percent) {
+            player.prop('muted', false);
+            player.prop('volume', percent);
+        },
+        onend: function (percent) {
+            player.prop('muted', false);
+            player.prop('volume', percent);
+        }
+    });
+
+    var setVolumeUI = function (volume) {
+        var btn = $muteToggleBtn[0];
+
+        var w = $volumeFull.width();
+        $volumeCtrl.css('left', volume * (w - $volumeCtrl.width()));
+        $volumeCurr.css('width', volume * w);
+
+        var isMuted = player.prop('muted');
+        var className = 'video-volume-btn__' + (
+            (volume === 0 || isMuted) ? 'muted' : (
+                (volume <  1/3) ? 1 : ((volume < 2/3) ? 2 : 3)
+            )
+        );
+        
+        btn.className = btn.className.replace(/video-volume-btn__(\d|muted)/g, '') + className;
+    };
+    
+    var updateVolumeUI = function () {
+        setVolumeUI(player.prop('muted') ? 0 : player.prop('volume'));
+    };
+    // 自动更新下 UI
+    updateVolumeUI();
+
+    player.on('volumechange', function () {
+        var volume = player.prop('volume');
+        if (volume < 0.01 && volume > 0) {
+            player.prop('volume', 0);
+        }
+        
+        // 静音状态则 UI 归零
+        if (player.prop('muted')) {
+            volume = 0;
+        } else {
+            // 非静音状态 但 volume 为 0
+            // if (player.prop('volume') === 0) {
+            //     player.prop('volume', 1);
+            //     return;
+            // }
+        }
+        setVolumeUI(volume);
+    });
+
+    $muteToggleBtn.on('click', function () {
+        player.prop('muted', !player.prop('muted'));
+    });
+
+    //-----------------------------------------------------------------------
+    // 全屏切换
+    var $expandBtn  = _$('.video-expand');
+    var $expandIcon = _$('.video-expand-btn');
+    var CLASS_FULL_SCREEN = 'video-wrapper__fullscreen';
+    var CLASS_BTN_EXPAND  = 'video-expand-btn__expanded';
+    var CLASS__FULL_SCREEN_IDENT = 'isFullScreen';
+
+    var $rootBody = $('html, body');
+    var CLASS_BODY_HIDDEN = 'body__hidden';
+    /**
+     * 控制全屏切换
+     * 切换的同时 更新 UI
+     */
+    var toggleFullScreen = function () {
+        $rootBody.toggleClass(CLASS_BODY_HIDDEN);
+
+        if (screenfull) {
+            screenfull.toggle($playerWrap[0]);
+        } else {
+            $playerWrap.toggleClass(CLASS_FULL_SCREEN);
+        }
+        $expandIcon.toggleClass(CLASS_BTN_EXPAND);
+        $playerWrap.toggleClass(CLASS__FULL_SCREEN_IDENT);
+
+        updateControlView();
+        updateTimeline();
+        updateVolumeUI();
+        updateProgressUI();
+    };
+
+    if (!screenfull && !player.options.simulateFullScreen) {
+        $expandIcon.hide();
+    } else {
+        $expandBtn.on('click', toggleFullScreen);
+    }
+
+    // 真正全屏状态下  ESC退出时
+    // keydown 事件是无法捕获到的
+    // 所以只能通过 fullscreenchange 事件进行
+    if (screenfull) {
+        $(window).on(screenfull.raw.fullscreenchange, function () {
+            if (!screenfull.isFullscreen) {
+                $rootBody.removeClass(CLASS_BODY_HIDDEN);
+                $expandIcon.removeClass(CLASS_BTN_EXPAND);
+                $playerWrap.removeClass(CLASS_FULL_SCREEN);
+                $playerWrap.removeClass(CLASS__FULL_SCREEN_IDENT);
+            } else {
+                $rootBody.addClass(CLASS_BODY_HIDDEN);
+            }
+            
+            updateControlView();
+            updateTimeline();
+            updateVolumeUI();
+            updateProgressUI();
+        });
+    }
+
+    //-----------------------------------------------------------------------
+    // 双击全屏切换支持
+    // var lastClick = 0;
+    // var timeout = null;
+    // player.on('click', function () {
+    //     clearTimeout(timeout);
+    //     if (+new Date() - lastClick < 300) {
+    //         toggleFullScreen();
+    //         lastClick = 0;
+    //     } else {
+
+    //         lastClick = +new Date();
+    //         timeout = setTimeout(function () {
+    //             lastClick = 0;
+    //             togglePlay();
+    //         }, 300);
+    //         timers.push(timeout);
+    //     }
+    // });
+
+    // incr : [0, 1]
+    function increaseVolumeBy(incr) {
+        var vol = player.prop('volume');
+        var res = vol + incr;
+        res = res < 0 ? 0 : (res > 1 ? 1 : res);
+
+        if (player.prop('muted') && res > 0) {
+            player.prop('muted', false);
+        }
+
+        player.prop('volume', res);
+    }
+
+    // TODO: 暂时不支持键盘快进
+    // 进度百分比
+    // incr: [0, 1]
+    function seekByDecimal(incr) {
+        if (player.mode === 'swf') {
+            return;
+        }
+        var dura = player.prop('duration');
+
+        // duration 为 0
+        // 或者已经播放结束且在快进时
+        // 禁止
+        if (!dura || player.prop('ended') && incr > 0) {
+            return;
+        }
+
+        var cur = player.prop('currentTime') / dura;
+        var res = cur + incr;
+
+        res = res < 0 ? 0 : (res > 1 ? 1 : res);
+        player.seekTo(dura * res);
+
+        if (res === 1) {
+            if (player.options.loop) {
+                player.replay();
+            } else {
+                player.pause();
+            }
+        } else {
+            player.play();
+        }
+    }
+
+    function handleArrowKeyPress(key) {
+        switch (+key) {
+            case 37: // ←
+                return seekByDecimal(-0.1);
+            case 39: // →
+                return seekByDecimal(+0.1);
+            case 38: // ↑
+                return increaseVolumeBy(+0.1);
+            case 40: // ↓
+                return increaseVolumeBy(-0.1);
+        }
+    }
+    //-----------------------------------------------------------------------
+    // flash 假全屏状态下
+    // 保证能够使用 ESC(27) 退出
+    // 使用 F5(116) 刷新
+    // 空格(32) 暂停
+    $document.on('keydown.vjs', function (e) {
+        // 非全屏状态 不管
+        if(!isFullScreen()) {
+            return;
+        }
+
+        var key = +e.keyCode;
+        if(key === 116) {
+            location.reload();
+        } else if (key === 27) {
+            toggleFullScreen();
+        } else if (key === 32) {
+            togglePlay();
+        } else {
+            handleArrowKeyPress(key);
+        }
+    });
+
+    // flash 模式下 ESC
+    if (player.mode === 'swf') {
+        player.on('esc', function () {
+            if (isFullScreen()) {
+                toggleFullScreen();
+            }
+        });
+    }
+
+    // 空格键控制
+    // 非全屏状态下 
+    // 空格键控制播放 以及 F5 控制刷新的功能都不受限制 
+    $playerWrap.on('keydown.vjs', function (e) {
+        if (isFullScreen()) {
+            return;
+        }
+
+        var key = e.keyCode;
+        if (key === 32) {
+            togglePlay();
+        } else if (key === 116) {
+            location.reload();
+        } else {
+            handleArrowKeyPress(key);
+        }
+    }).on('selectstart', function (e) {
+        e.preventDefault();
+    }); 
+
+    // 窗口尺寸变化时
+    $(window).on('resize', throttle(function () {
+        updateControlView();
+        updateTimeline();
+        updateVolumeUI();
+        // 已经停止或已经放完之后 需要手动更新
+        // 播放时只更新 PROGRESS_TOTAL 就足够
+        if (player.prop('ended') || player.prop('paused')) {
+            updateProgressUI();
+        }
+    }, 100));
+
+    //-----------------------------------------------------------------------
+    /**
+     * 播放停止相互切换
+     */
+    function togglePlay() {
+        // ended 在前 
+        // H5 模式下 ended 时也会 paused
+        if (player.prop('ended')) {
+            return player.replay();
+        }
+        
+        if (player.prop('paused')) {
+            return player.play();
+        }
+
+        player.pause();
+    }
+
+    function isFullScreen() {
+        return $playerWrap.hasClass(CLASS__FULL_SCREEN_IDENT);
+    }
+
+    function throttle(fn,delay, immediate, debounce) {
+        var curr = +new Date(),//当前事件
+            last_call = 0,
+            last_exec = 0,
+            timer = null,
+            diff, //时间差
+            context,//上下文
+            args,
+            exec = function () {
+                last_exec = curr;
+                fn.apply(context, args);
+            };
+        return function () {
+            curr= +new Date();
+            context = this;
+            args = arguments;
+            diff = curr - (debounce ? last_call : last_exec) - delay;
+            clearTimeout(timer);
+            if (debounce) {
+                if (immediate) {
+                    timer = setTimeout(exec, delay);
+                } else if (diff >= 0) {
+                    exec();
+                }
+            } else {
+                if (diff >= 0) {
+                    exec();
+                } else if (immediate) {
+                    timer = setTimeout(exec, -diff);
+                }
+            }
+            timers$4.push(timer);
+            last_call = curr;
+        };
+    }
+};
+
+var require$$2 = ( styles$1 && styles ) || styles$1;
+
+var require$$3 = ( player$3 && player$2 ) || player$3;
+
+var RESOURCE = config;
+var loadCSS = loadCSS$1;
+var cssText = require$$2;
+loadCSS(cssText.replace(/__sprite/g, RESOURCE.sprite));
+
+var $template = $(require$$3);
+var swfobject = swfobject_1;
+var timers = timers$2;
+var EMITTER = $({});
+
+var rDOMEvents = /^on(blur|focus|focusin|focusout|load|resize|scroll|unload|click|dblclick|mousedown|mouseup|mousemove|mouseover|mouseout|mouseenter|mouseleave|change|select|submit|keydown|keypress|keyup|error|contextmenu)\=/i;
+
+//*******************************************************************************
+var debugInfo = {};
+/**
+ * @constructor 
+ * 
+ * @param {String} selector  Wrap 节点
+ * @param {Object} options 配置对象
+ */
+function SwfPlayer(selector, options) {
+    options = $.extend({}, {
+        swfUrl: RESOURCE.swf,
+        loading: RESOURCE.loading,
+        bgcolor: '#000',
+        preload: false,
+        loop: false,
+        autoplay: false,
+        muted: false,
+        volume: 1,
+        simulateFullScreen: true
+    }, options);
+    
+    this.options = options;
+
+    this.vid = this.getVID();
+    debugInfo[this.vid] = this;
+    this.readyCalls = [ ready ];
+
+    var $container = $(selector);
+    $container.empty();
+    $template.clone().appendTo($container);
+    this.$wrap = $container.find('.video-wrapper');
+    this.$wrap.prepend('<div id="' + this.vid + '"></div>');
+
+    this.clickUrl = $.trim(options.clickUrl || '');
+    var clickTrack = options.clickUrlTrack || '';
+    var playTrack  = options.playTrack || '';
+    this.clickUrlTrack = $.isFunction(clickTrack) ? clickTrack : $.trim(clickTrack).replace(rDOMEvents, '');
+    this.playTrack = $.isFunction(playTrack) ? playTrack : $.trim(playTrack).replace(rDOMEvents, '');
+
+    // poster
+    if (options.poster) {
+        this.$wrap.find('.vplayer-poster img').attr('src', options.poster);
+    }
+
+    // 添加 loading 动画
+    this.$wrap.find('.vplayer-loading').attr('src', options.loading);
+    
+    var hasFlash  = /^0{0,3}$/.test(swfobject.ua.pv.join('')) === false;
+    var versionOK = swfobject.hasFlashPlayerVersion('11.4.0');
+
+    if (!hasFlash || !versionOK) {
+        this.$wrap.find('.flash-tip').show();
+    } else {
+        this.createPlayer();
+    }
+}
+
+SwfPlayer.prototype = {
+    constructor: SwfPlayer,
+    /**
+     * 对外暴露事件接口
+     */
+    on: function(eventName, fn) {
+        var events = eventName.split(/\s+/);
+        for (var i = 0, len = events.length; i < len; i++) {
+            EMITTER.on.call(EMITTER, events[i] + '_' + this.vid, fn);
+        }
+        return this;
+    },
+
+    off: function(eventName, fn) {
+        if (!eventName) {
+            EMITTER.off();
+        } else {
+            var events = eventName.split(/\s+/);
+            for (var i = 0, len = events.length; i < len; i++) {
+                EMITTER.off.call(EMITTER, events[i] + '_' + this.vid, fn);
+            }
+        }
+        return this;
+    },
+
+    /**
+     * 生成 guid 
+     */
+    getVID: function() {
+        return 'vjs_' + (+new Date());
+    },
+
+    /**
+     * 利用 swfobject.js 生成 flash 播放的 DOM 节点
+     */
+    createPlayer: function() {
+        this.mode = 'swf';
+        this.$wrap.css('background-color', this.options.bgcolor);
+
+        var flashvars = {
+            src: this.options.src,
+            autoplay: this.options.autoplay,
+            preload: this.options.preload,
+            loop: this.options.loop,
+            volume: this.options.volume,
+            muted: this.options.muted,
+            allowFullScreen: true,
+            wmode: 'transparent'
+        };
+
+        var params = {
+            allowScriptAccess: 'always',
+            bgcolor: this.options.bgcolor,
+            allowFullScreen: true,
+            wmode: 'transparent'
+        };
+
+        var attributes = {
+            id: this.vid,
+            name: this.vid
+        };
+
+        swfobject.embedSWF(
+            this.options.swfUrl,
+            this.vid,
+            '100%',
+            '100%',
+            '10.3',
+            '',
+            flashvars,
+            params,
+            attributes
+        );
+
+        this.initEvents();
+    },
+
+    track: function (track) {
+        try {
+            if ($.isFunction(track)) {
+                track();
+            } else {
+                var fn = new Function(track);
+                fn();
+            }
+        } catch (e) {
+            if (window.console) {
+                window.console.log(e);
+            }
+        }
+    },
+
+    applyPlayTrack: function() {
+        // 播放打点
+        var track = this.playTrack;
+        var self = this;
+        if (track) {
+            this.on('track', function () {
+                self.track(track);
+            });
+        }
+    },
+
+    /**
+     * 绑定初始 ready 事件
+     */
+    initEvents: function() {
+        /**
+         * 绑定事件
+         */
+        var cxt = this;
+        
+        this.on('ready', function() {
+            cxt.readyState = 'complete';
+            cxt.vidElem = document.getElementById(cxt.vid);
+            // cxt.options.volume && cxt.prop('volume', cxt.options.volume);
+
+            var readyCalls = cxt.readyCalls;
+            for (var i = 0, len = readyCalls.length; i < len; i++) {
+                readyCalls[i].call(cxt, cxt, cxt.vidElem);
+            }
+        }).on('stageclick', function() {
+            EMITTER.trigger('click_' + cxt.vid);
+        }).on('ended', function () {
+            if (cxt.options.loop) {
+                var _t = setTimeout(function () {
+                    cxt.replay();
+                }, 100);
+                timers.push(_t);
+            }
+        }).on('playing', function () {
+            // 用于首次播放时的打点
+            if (cxt.__not_first) {
+                return;
+            }
+            cxt.__not_first = true;
+            EMITTER.trigger('track_' + cxt.vid); 
+        });
+
+        this.applyPlayTrack();
+    },
+
+    /**
+     * onReady 添加回调
+     */
+    ready: function(readyFunc) {
+        if (this.readyState === 'complete') {
+            readyFunc.call(this, this, this.vidElem, this.$wrap);
+        } else {
+            this.readyCalls.push(readyFunc);
+        }
+        return this;
+    },
+
+    /**
+     * 设置视频源
+     * @param {String} src 视频源路径
+     */
+    setSource: function (src) {
+        this.vidElem.vjs_src(src);
+        return this;
+    },
+
+    play: function() {
+        // 防止出现问题
+        // TODO: loop 时如何判定
+        var dura = this.prop('duration');
+        if (dura > 0 && dura <= this.prop('currentTime')) {
+            if (!this.options.loop) {
+                this.pause();
+            } else {
+                this.replay();
+            }
+        } else {
+            this.vidElem.vjs_play();
+        }
+        return this;
+    },
+
+    pause: function() {
+        this.vidElem.vjs_pause();
+        return this;
+    },
+
+    /**
+     * 视频跳转
+     * @param  {Number} seconds 视频跳到指定秒数
+     */
+    seekTo: function(seconds) {
+        this.prop('currentTime', seconds);
+        return this;
+    },
+
+    replay: function () {
+        this.seekTo(0);
+        var self = this;
+        if (self.prop('paused')) {
+            self.play();
+        }
+        
+        var _t = setTimeout(function () {
+            if (self.prop('paused')) {
+                self.play();
+            }
+
+            // 重新播放的时候，用于打点
+            EMITTER.trigger('track_' + self.vid);
+        }, 0);
+        timers.push(_t);
+    },
+
+    prop: function(name, value) {
+        var elem = this.vidElem;
+
+        if (arguments.length === 1) {
+            return elem.vjs_getProperty(name);
+        }
+
+        elem.vjs_setProperty(name, value);
+
+        return this;
+    }
+};
+
+function VideoPlayer() {
+    // 原型冒充
+    SwfPlayer.apply(this, arguments);
+} 
+
+var videoPlayProto = {
+    constructor: VideoPlayer,
+    addAttrs: function(obj) {
+        for (var key in obj){
+            if (obj.hasOwnProperty(key)) {
+                if (obj[key]) {
+                    this.vidElem[key] = obj[key];
+                }
+            }
+        }
+    },
+
+    /**
+     * 利用 swfobject.js 生成 flash 播放的 DOM 节点
+     */
+    createPlayer: function() {
+        this.mode = 'video';
+        this.$wrap.css('background-color', this.options.bgcolor);
+        this.$wrap.find('#' + this.vid).remove();
+        
+        var $elem = $('<video />');
+        this.vidElem = $elem[0];
+
+        this.addAttrs({
+            controls: false,
+            id: this.vid,
+            name: this.vid,
+            src: this.options.preload ? this.options.src : '',
+            preload: this.options.preload,
+            // loop 不应直接添加给 video 元素
+            // 否则 IE 11 下面监听不到事件
+            // loop: this.options.loop,
+            autoplay: this.options.autoplay,
+            muted: this.options.muted
+        });
+        
+        $elem.css({
+            width: '100%',
+            height: '100%'
+        });
+        this.$wrap.prepend($elem);
+        this.vidElem.volume = this.options.volume;
+        this._lastVolume = this.options.volume;
+
+        this.initEvents();
+    },
+
+    /**
+     * 绑定初始 ready 事件
+     */
+    initEvents: function() {
+        /**
+         * 绑定事件
+         */
+        var cxt = this;
+        this.on('ended', function () {
+            if (cxt.options.loop) {
+                var _t = setTimeout(function () {
+                    cxt.replay();
+                }, 100);
+                timers.push(_t);
+            }
+        }).on('playing', function () {
+            // 用于首次播放时的打点
+            if (cxt.__not_first) {
+                return;
+            }
+            cxt.__not_first = true;
+            EMITTER.trigger('track_' + cxt.vid); 
+        });
+
+        this.applyPlayTrack();
+
+        var vid = this.vid;
+        var elem = document.getElementById(vid);
+        var events = [ 'canplaythrough', 'durationchange', 'playing', 'play', 'loadstart', 'pause', 'ended', 'volumechange', 'click' ];
+        $.each(events, function (i, name) {
+            $(elem).on(name, function (){
+                EMITTER.trigger(name + '_' + vid);
+            });
+        });
+
+        // ready....
+        var readyCalls = cxt.readyCalls;
+        var fn = null;
+
+        while (readyCalls.length) {
+            fn = readyCalls.shift();
+            fn.call(cxt, cxt, elem);
+        }
+
+        cxt.readyState = 'complete';
+    },
+
+    /**
+     * 设置视频源
+     * @param {String} src 视频源路径
+     */
+    setSource: function (src) {
+        this.prop('src', src);
+        return this;
+    },
+
+    play: function() {
+        // 不预加载的情况
+        if (!this.options.preload && !this.prop('currentSrc')) {
+            this.vidElem.src = this.options.src;
+        }
+        // 防止出现问题
+        // TODO: loop 时如何判定
+        var dura = this.prop('duration');
+        if (dura > 0 && dura <= this.prop('currentTime')) {
+            if (!this.options.loop) {
+                this.pause();
+            } else {
+                this.replay();
+            }
+        } else {
+            this.vidElem.play();
+        }
+        return this;
+    },
+
+    pause: function() {
+        this.vidElem.pause();
+        return this;
+    },
+
+    /**
+     * 视频跳转
+     * @param  {Number} seconds 视频跳到指定秒数
+     */
+    seekTo: function(seconds) {
+        this.vidElem.currentTime = seconds;
+        return this;
+    },
+
+    replay: function () {
+        // this.seekTo(0);
+        // if (this.prop('paused')) {
+        //     this.play();
+        // }
+        this.vidElem.currentTime = 0;
+        this.vidElem.play();
+        
+        var self = this;
+        var _t = setTimeout(function () {
+            if (self.prop('paused')) {
+                self.play();
+            }
+
+            // 重新播放的时候，用于打点
+            EMITTER.trigger('track_' + self.vid);
+        }, 0);
+        timers.push(_t);
+    },
+
+    prop: function(name, value) {
+        var elem = this.vidElem;
+        if (arguments.length === 1) {
+            if (name == 'lastVolume') {
+                return this._lastVolume > 0 ? this._lastVolume : 1;
+            }
+            return elem[name];
+        }
+        
+        elem[name] = value;
+        // if (name === 'muted') {
+        //     elem['volume'] = Number(!value);
+        // } else if (name === 'volume' && value > 0) {
+        //     elem['muted'] = false;
+        // }
+
+        if (name === 'volume') {
+            this._lastVolume = elem.volume;
+        }
+
+        return this;
+    }
+};
+
+VideoPlayer.prototype = $.extend({}, SwfPlayer.prototype, videoPlayProto);
+
+var supportsMP4 = (function () {
+    var elem = document.createElement('video');
+    var res = '';
+    try {
+        res = elem.canPlayType && elem.canPlayType('video/mp4; codecs="avc1.42E01E"').replace(/^no$/, '');
+    } catch (e) {}
+    elem = null;
+    return !!res;
+}());
+
+var vPlayer = function (selector, options) {
+    if (!options || !options.src) {
+        throw 'option src needed!';
+    }
+
+    var player;
+    // 指定为 swf
+    var forceSwf = options.mode === 'swf';
+    // 不是 mp4 类型(暂时忽略不常用的 ogg 等格式)
+    var typeUnfit = !/mp4$/i.test(options.src + '');
+    // 还有一种情况是浏览器压根不支持 video
+    if (!supportsMP4 || forceSwf || typeUnfit) {
+        player = new SwfPlayer(selector, options);
+        player.mode = 'swf';
+    } else {
+        player = new VideoPlayer(selector, options);
+        player.mode = 'video';
+        
+        player.$wrap.on('contextmenu', function (e) {
+            e.preventDefault();
+        });
+    }
+    
+    return player;
+};
+
+var player = $.vPlayer = vPlayer;
+
+/**
+ * 引入 jQuery 插件模式
+ */
+$.fn.vPlayer = function () {
+    this.each(function (i, el) {
+        var $el = $(el);
+        var config$$1 = {};
+        config$$1.mode = $el.attr('mode'); 
+        config$$1.src  = $el.attr('src'); 
+        
+        var loop = $el.attr('loop');
+        if (loop !== void 0) {
+            config$$1.loop = true;
+        }
+
+        // preload="auto" 需要与 autoplay="true" 一起使用 否则会出问题
+        // 这里的设置实际上是无效的
+        // 不过我打算先不管了
+        // 2016-11-21
+        var preload = $el.attr('preload');
+        if (preload !== void 0) {
+            config$$1.preload = true;
+        }
+
+        var autoplay = $el.attr('autoplay');
+        if (autoplay !== void 0) {
+            config$$1.autoplay = true;
+        }
+
+        var muted = $el.attr('muted');
+        if (muted !== void 0) {
+            config$$1.muted = true;
+        }
+
+        var simulatefullscreen = $el.attr('simulatefullscreen');
+        if (simulatefullscreen !== void 0) {
+            config$$1.simulateFullScreen = true;
+        }
+
+        var volume = $el.attr('volume');
+        if (volume !== void 0) {
+            config$$1.volume = parseFloat(volume);
+        }
+
+        var poster = $el.attr('poster');
+        if (poster) {
+            config$$1.poster = poster;
+        }
+
+        var href = $.trim($el.attr('href'));
+        if (href) {
+            config$$1.clickUrl = href;
+        }
+
+        var onHrefOpen = $.trim($el.attr('onurlopen'));
+        if (onHrefOpen) {
+            config$$1.clickUrlTrack = onHrefOpen;
+        }
+
+        var onPlay = $.trim($el.attr('onplay'));
+        if (onPlay) {
+            config$$1.playTrack = onPlay;
+        }
+
+        var swfUrl = $.trim($el.attr('swf'));
+        if (swfUrl) {
+            config$$1.swfUrl = swfUrl;
+        }
+
+        return $.vPlayer($el, config$$1);
+    });
+
+    return this;
+};
+
+vPlayer.timers = timers;
+
+/**
+ * 事件回调
+ */
+vPlayer.onEvent = function (vid, eventName) {
+    EMITTER.trigger(eventName + '_' + vid);
+};
+
+/**
+ * 发生错误
+ */
+vPlayer.onError = function (vid, eventName) {
+    EMITTER.trigger('error_' + vid, eventName);
+};
+
+/**
+ * flash ready
+ */
+vPlayer.onReady = function (vid) {
+    EMITTER.trigger('ready_' + vid);
+};
+
+/**
+ * debug in console
+ */
+vPlayer.debug = function (vid) {
+    return vid ? debugInfo[vid] : debugInfo;
+};
+vPlayer.debug.emitter = EMITTER;
+
+/**
+ * log events 
+ */
+EMITTER._trigger = EMITTER.trigger;
+EMITTER.trigger = function (eventName) {
+    if (vPlayer.debugMode && window.console) {
+        console.log(eventName);
+    }
+
+    EMITTER._trigger(eventName);
+};
+vPlayer.toggleEventLog = function () {
+    vPlayer.debugMode = !vPlayer.debugMode;
+};
+
+return player;
+
+})));
 //# sourceMappingURL=bundle.js.map

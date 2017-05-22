@@ -19,8 +19,8 @@ There are some rules you should follow when customizing.
  
 ## CDN
 
-RTMP: https://s2.ssl.qhres.com/!6b30d5ed/player/rtmp.js
-MP4:  https://s4.ssl.qhres.com/!6b30d5ed/player/mp4.js
+RTMP: https://s2.ssl.qhres.com/!cc05dc9b/player/rtmp.js
+MP4:  https://s5.ssl.qhres.com/!cc05dc9b/player/mp4.js
 
 ## Usage
 

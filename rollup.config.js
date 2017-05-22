@@ -1,8 +1,8 @@
 import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
 import html from 'rollup-plugin-html';
-import uglify from 'rollup-plugin-uglify';
-import { minify } from 'uglify-js';
+// import uglify from 'rollup-plugin-uglify';
+// import { minify } from 'uglify-js';
 
 // for css imports
 import { renderSync } from 'node-sass';
@@ -105,6 +105,6 @@ export default {
     }),
     commonjs(),
     es3FixRollupPlugin,
-    IS_WATCHING_MODE ? browserSyncRolluPlugin : uglify({}, minify)
+    IS_WATCHING_MODE ? browserSyncRolluPlugin : {} //}glify({}, minify)
   ]
 };
