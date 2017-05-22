@@ -20,8 +20,6 @@ There are some rules you should follow when customizing.
 
 ## Usage
 
-CDN: https://s1.ssl.qhres.com/static/66494cfb2de6059c.js
-
 ```javascript
 var vplayer = $.vPlayer("#container", {
     // force FLASH mode

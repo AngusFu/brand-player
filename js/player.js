@@ -56,7 +56,15 @@ function SwfPlayer(selector, options) {
 
     // 添加 loading 动画
     this.$wrap.find('.vplayer-loading').attr('src', options.loading);
-    this.createPlayer();
+
+    var hasFlash  = /^0{0,3}$/.test(swfobject.ua.pv.join('')) === false;
+    var versionOK = swfobject.hasFlashPlayerVersion('11.4.0');
+
+    if (!hasFlash || !versionOK) {
+        this.$wrap.find('.flash-tip').show();
+    } else {
+        this.createPlayer();
+    }
 }
 
 SwfPlayer.prototype = {
