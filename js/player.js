@@ -5,6 +5,7 @@ loadCSS(cssText.replace(/__sprite/g, RESOURCE.sprite));
 
 var $template = $(require('../html/player.html'));
 var swfobject = require('./swfobject');
+var timers = require('./timers');
 var EMITTER = $({});
 
 var rDOMEvents = /^on(blur|focus|focusin|focusout|load|resize|scroll|unload|click|dblclick|mousedown|mouseup|mousemove|mouseover|mouseout|mouseenter|mouseleave|change|select|submit|keydown|keypress|keyup|error|contextmenu)\=/i;
@@ -183,9 +184,10 @@ SwfPlayer.prototype = {
             EMITTER.trigger('click_' + cxt.vid);
         }).on('ended', function () {
             if (cxt.options.loop) {
-                setTimeout(function () {
+                var _t = setTimeout(function () {
                     cxt.replay();
                 }, 100);
+                timers.push(_t);
             }
         }).on('playing', function () {
             // 用于首次播放时的打点
@@ -256,7 +258,8 @@ SwfPlayer.prototype = {
         if (self.prop('paused')) {
             self.play();
         }
-        setTimeout(function () {
+        
+        var _t = setTimeout(function () {
             if (self.prop('paused')) {
                 self.play();
             }
@@ -264,6 +267,7 @@ SwfPlayer.prototype = {
             // 重新播放的时候，用于打点
             EMITTER.trigger('track_' + self.vid);
         }, 0);
+        timers.push(_t);
     },
 
     prop: function(name, value) {
@@ -341,9 +345,10 @@ var videoPlayProto = {
         var cxt = this;
         this.on('ended', function () {
             if (cxt.options.loop) {
-                setTimeout(function () {
+                var _t = setTimeout(function () {
                     cxt.replay();
                 }, 100);
+                timers.push(_t);
             }
         }).on('playing', function () {
             // 用于首次播放时的打点
@@ -429,7 +434,7 @@ var videoPlayProto = {
         this.vidElem.play();
         
         var self = this;
-        setTimeout(function () {
+        var _t = setTimeout(function () {
             if (self.prop('paused')) {
                 self.play();
             }
@@ -437,6 +442,7 @@ var videoPlayProto = {
             // 重新播放的时候，用于打点
             EMITTER.trigger('track_' + self.vid);
         }, 0);
+        timers.push(_t);
     },
 
     prop: function(name, value) {

@@ -1,3 +1,4 @@
+var timers = require('./timers');
 
 /*!    SWFObject v2.3.20130521 <http://github.com/swfobject/swfobject>
     is released under the MIT License <http://www.opensource.org/licenses/mit-license.php>
@@ -115,7 +116,8 @@ var swfobject = function() {
                             try {
                                 doc.documentElement.doScroll("left");
                             } catch (e) {
-                                setTimeout(checkDomLoadedIE, 0);
+                                var _t = setTimeout(checkDomLoadedIE, 0);
+                                timers.push(_t);
                                 return;
                             }
                             callDomLoadFunctions();
@@ -128,7 +130,8 @@ var swfobject = function() {
                             return;
                         }
                         if (!/loaded|complete/.test(doc.readyState)) {
-                            setTimeout(checkDomLoadedWK, 0);
+                            var _t = setTimeout(checkDomLoadedWK, 0);
+                            timers.push(_t);
                             return;
                         }
                         callDomLoadFunctions();
@@ -218,7 +221,8 @@ var swfobject = function() {
                     }
                 } else if (counter < 10) {
                     counter++;
-                    setTimeout(checkGetVariable, 10);
+                    var _t = setTimeout(checkGetVariable, 10);
+                    timers.push(_t);
                     return;
                 }
                 b.removeChild(o);
@@ -522,7 +526,8 @@ var swfobject = function() {
                         }
                         obj.parentNode.removeChild(obj);
                     } else {
-                        setTimeout(removeSWFInIE, 10);
+                        var _t = setTimeout(removeSWFInIE, 10);
+                        timers.push(_t);
                     }
                 }());
             } else {

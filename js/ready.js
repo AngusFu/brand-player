@@ -259,12 +259,14 @@ module.exports = function ready(player, elem) {
         timer = setInterval(function() {
             updateProgressUI();
         }, 30);
+        timers.push(timer);
 
         $posterAndPlayBtn.hide();
         
-        setTimeout(function () {
+        var _t = setTimeout(function () {
             $loading.hide();
         }, 0);
+        timers.push(_t);
     });
 
     player.on('playing', function () {
@@ -275,6 +277,7 @@ module.exports = function ready(player, elem) {
         timer = setInterval(function() {
             updateProgressUI();
         }, 30);
+        timers.push(timer);
 
         $posterAndPlayBtn.hide();
     });
@@ -463,6 +466,7 @@ module.exports = function ready(player, elem) {
     //             lastClick = 0;
     //             togglePlay();
     //         }, 300);
+    //         timers.push(timeout);
     //     }
     // });
 
@@ -641,6 +645,7 @@ module.exports = function ready(player, elem) {
                     timer = setTimeout(exec, -diff);
                 }
             }
+            timers.push(timer);
             last_call = curr;
         };
     }
