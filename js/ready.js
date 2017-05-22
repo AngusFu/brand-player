@@ -1,9 +1,6 @@
 var screenfull = require('./screenfull');
-var pushSo = function (t) {
-    if (window.So && window.So.page) {
-        window.So.page.timers.push(t);
-    }
-};
+var timers = require('./timers');
+
 module.exports = function ready(player, elem) {
     var playOpts = player.options;
     window['swf_' + elem.id] = player;
@@ -417,7 +414,7 @@ module.exports = function ready(player, elem) {
             }
 
             if (timer) {
-                pushSo(timer);
+                timers.push(timer);
             }
             last_call = curr;
         };

@@ -39,6 +39,10 @@ var player$3 = {
 	__def: player$2
 };
 
+var w = window;
+var timers$1 = w.So && w.So.page && w.So.page.timer || [];
+
+var timers = timers$1;
 /*!    SWFObject v2.3.20130521 <http://github.com/swfobject/swfobject>
     is released under the MIT License <http://www.opensource.org/licenses/mit-license.php>
 */
@@ -155,7 +159,8 @@ var swfobject = function() {
                             try {
                                 doc.documentElement.doScroll("left");
                             } catch (e) {
-                                setTimeout(checkDomLoadedIE, 0);
+                                var _t = setTimeout(checkDomLoadedIE, 0);
+                                timers.push(_t);
                                 return;
                             }
                             callDomLoadFunctions();
@@ -168,7 +173,8 @@ var swfobject = function() {
                             return;
                         }
                         if (!/loaded|complete/.test(doc.readyState)) {
-                            setTimeout(checkDomLoadedWK, 0);
+                            var _t = setTimeout(checkDomLoadedWK, 0);
+                            timers.push(_t);
                             return;
                         }
                         callDomLoadFunctions();
@@ -258,7 +264,8 @@ var swfobject = function() {
                     }
                 } else if (counter < 10) {
                     counter++;
-                    setTimeout(checkGetVariable, 10);
+                    var _t = setTimeout(checkGetVariable, 10);
+                    timers.push(_t);
                     return;
                 }
                 b.removeChild(o);
@@ -562,7 +569,8 @@ var swfobject = function() {
                         }
                         obj.parentNode.removeChild(obj);
                     } else {
-                        setTimeout(removeSWFInIE, 10);
+                        var _t = setTimeout(removeSWFInIE, 10);
+                        timers.push(_t);
                     }
                 }());
             } else {
@@ -1044,11 +1052,8 @@ var screenfull$1 = createCommonjsModule(function (module) {
 });
 
 var screenfull = screenfull$1;
-var pushSo = function (t) {
-    if (window.So) {
-        So.page.timers.push(t);
-    }
-};
+var timers$3 = timers$1;
+
 var ready = function ready(player, elem) {
     var playOpts = player.options;
     window['swf_' + elem.id] = player;
@@ -1158,7 +1163,6 @@ var ready = function ready(player, elem) {
     var $poster = _$('.vplayer-poster');
     var $loading = _$('.vplayer-loading');
     var CLASS_PLAY_PAUSED = 'vplayer-play-pause';
-    var timer = null;
 
     $videoPlayBtn.on('click', function () {
         togglePlay();
@@ -1462,7 +1466,9 @@ var ready = function ready(player, elem) {
                 }
             }
 
-            timer && pushSo(timer);
+            if (timer) {
+                timers$3.push(timer);
+            }
             last_call = curr;
         };
     }
@@ -1480,6 +1486,7 @@ loadCSS$$1(cssText.replace(/__sprite/g, RESOURCE.sprite));
 
 var $template = $(require$$3);
 var swfobject = swfobject_1;
+var timers = timers$1;
 var EMITTER = $({});
 
 var rDOMEvents = /^on(blur|focus|focusin|focusout|load|resize|scroll|unload|click|dblclick|mousedown|mouseup|mousemove|mouseover|mouseout|mouseenter|mouseleave|change|select|submit|keydown|keypress|keyup|error|contextmenu)\=/i;
@@ -1665,9 +1672,10 @@ SwfPlayer.prototype = {
 
         this.on('ended', function () {
             if (this$1.options.loop) {
-                setTimeout(function () {
+                var _t = setTimeout(function () {
                     this$1.replay();
                 }, 100);
+                timers.push(_t);
             }
         });
 

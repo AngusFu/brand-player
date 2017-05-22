@@ -20,11 +20,9 @@ There are some rules you should follow when customizing.
 
 ## Usage
 
-video player CDN：https://s5.ssl.qhres.com/static/7d03c52f7c3fb0cb.js
-
-videp player version: https://s4.ssl.qhres.com/static/d558f2844867ab11.js
-videp player demo: http://jsbin.com/cufefurage
-RTMP version: https://s2.ssl.qhres.com/static/5bc488d02d5ba126.js
+video player version: https://s4.ssl.qhres.com/static/d558f2844867ab11.js
+video player demo: http://jsbin.com/cufefurage
+RTMP version: https://s5.ssl.qhres.com/static/46b58ce27573fad9.js
 RTMP demo: http://output.jsbin.com/gobigunezi/1
 
 ```javascript

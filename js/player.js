@@ -5,6 +5,7 @@ loadCSS(cssText.replace(/__sprite/g, RESOURCE.sprite));
 
 var $template = $(require('../html/player.html'));
 var swfobject = require('./swfobject');
+var timers = require('./timers');
 var EMITTER = $({});
 
 var rDOMEvents = /^on(blur|focus|focusin|focusout|load|resize|scroll|unload|click|dblclick|mousedown|mouseup|mousemove|mouseover|mouseout|mouseenter|mouseleave|change|select|submit|keydown|keypress|keyup|error|contextmenu)\=/i;
@@ -184,9 +185,10 @@ SwfPlayer.prototype = {
 
         this.on('ended', () => {
             if (this.options.loop) {
-                setTimeout(() => {
+                var _t = setTimeout(() => {
                     this.replay();
                 }, 100);
+                timers.push(_t);
             }
         });
 

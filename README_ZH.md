@@ -17,7 +17,7 @@
 
 ## 使用
 
-CDN：https://s5.ssl.qhres.com/static/7d03c52f7c3fb0cb.js
+CDN：https://s5.ssl.qhres.com/static/46b58ce27573fad9.js
 
 ```javascript
 var vplayer = $.vPlayer("#container", {
