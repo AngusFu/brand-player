@@ -20,10 +20,7 @@ There are some rules you should follow when customizing.
 
 ## Usage
 
-video player version: https://s4.ssl.qhres.com/static/d558f2844867ab11.js
-video player demo: http://jsbin.com/cufefurage
-RTMP version: https://s5.ssl.qhres.com/static/46b58ce27573fad9.js
-RTMP demo: http://output.jsbin.com/gobigunezi/1
+CDN: https://s1.ssl.qhres.com/static/66494cfb2de6059c.js
 
 ```javascript
 var vplayer = $.vPlayer("#container", {

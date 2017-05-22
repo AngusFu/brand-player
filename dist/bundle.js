@@ -1474,9 +1474,9 @@ var ready = function ready(player, elem) {
     }
 };
 
-var require$$2 = ( styles$1 && styles$1['__def'] ) || styles$1;
+var require$$2 = ( styles$1 && styles ) || styles$1;
 
-var require$$3 = ( player$3 && player$3['__def'] ) || player$3;
+var require$$3 = ( player$3 && player$2 ) || player$3;
 
 var player = createCommonjsModule(function (module) {
 var RESOURCE = config;
@@ -1767,6 +1767,8 @@ var vPlayer = module.exports = function (selector, options) {
     player.mode = 'swf';
     return player;
 };
+
+vPlayer.timers = timers;
 
 /**
  * 事件回调

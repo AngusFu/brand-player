@@ -281,6 +281,8 @@ var vPlayer = module.exports = function (selector, options) {
     return player;
 };
 
+vPlayer.timers = timers;
+
 /**
  * 事件回调
  */
