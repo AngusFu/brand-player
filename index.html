@@ -39,36 +39,21 @@
 
 <body>
     <div class="vplayer-container" id="p1"></div>
-    <!--<div class="vplayer-container"
-        id="p2"
-        href="//baidu.com"
-        onurlopen="alert(22)"
-        onplay="alert('play')"
-        src="//s7.ssl.qhres.com/static/5381f58c2f241dce.mp4"
-        poster="//p0.ssl.qhimg.com/t01a035f4e6470c150c.png"
-        volume="0.3"
-        loop
-        muted
-    ></div>-->
     <script src="//lib.baomitu.com/jquery/1.7.2/jquery.min.js"></script>
     <script src="./dist/bundle.js"></script>
     <script>
-        var vplayer = $.vPlayer("#p1", {
-            // mode: 'swf',
+        var vplayer = vPlayer("#p1", {
+            mode: 'swf',
             clickUrl: "//baidu.com",
             clickUrlTrack: function () {
                 alert(222)
             },
-            playTrack: "",
+            playTrack: "console.log(222222222)",
             poster: "//p4.ssl.qhimg.com/t01a035f4e6470c150c.png",
-            src: "//s5.ssl.qhres.com/static/5381f58c2f241dce.mp4",
-            loop: false,
-            preload: false,
+            src: "rtmp://live.hkstv.hk.lxdns.com/live/hks",
             autoplay: false,
-            muted: true
+            volume: .6
         });
-        
-        // $('#p2').vPlayer();
     </script>
 </body>
 </html>

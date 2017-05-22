@@ -29,12 +29,12 @@ function SwfPlayer(selector, options) {
         volume: 1,
         simulateFullScreen: true
     }, options);
-    
+
     this.options = options;
 
     this.vid = this.getVID();
     debugInfo[this.vid] = this;
-    this.readyCalls = [ require('./ready') ];
+    this.readyCalls = [require('./ready')];
 
     var $container = $(selector);
     $container.empty();
@@ -44,7 +44,7 @@ function SwfPlayer(selector, options) {
 
     this.clickUrl = $.trim(options.clickUrl || '');
     var clickTrack = options.clickUrlTrack || '';
-    var playTrack  = options.playTrack || '';
+    var playTrack = options.playTrack || '';
     this.clickUrlTrack = $.isFunction(clickTrack) ? clickTrack : $.trim(clickTrack).replace(rDOMEvents, '');
     this.playTrack = $.isFunction(playTrack) ? playTrack : $.trim(playTrack).replace(rDOMEvents, '');
 
@@ -63,7 +63,7 @@ SwfPlayer.prototype = {
     /**
      * 对外暴露事件接口
      */
-    on: function(eventName, fn) {
+    on(eventName, fn) {
         var events = eventName.split(/\s+/);
         for (var i = 0, len = events.length; i < len; i++) {
             EMITTER.on.call(EMITTER, events[i] + '_' + this.vid, fn);
@@ -71,7 +71,7 @@ SwfPlayer.prototype = {
         return this;
     },
 
-    off: function(eventName, fn) {
+    off(eventName, fn) {
         if (!eventName) {
             EMITTER.off();
         } else {
@@ -86,19 +86,18 @@ SwfPlayer.prototype = {
     /**
      * 生成 guid 
      */
-    getVID: function() {
+    getVID() {
         return 'vjs_' + (+new Date());
     },
 
     /**
      * 利用 swfobject.js 生成 flash 播放的 DOM 节点
      */
-    createPlayer: function() {
+    createPlayer() {
         this.mode = 'swf';
         this.$wrap.css('background-color', this.options.bgcolor);
 
         var flashvars = {
-            src: this.options.src,
             autoplay: this.options.autoplay,
             preload: this.options.preload,
             loop: this.options.loop,
@@ -107,6 +106,10 @@ SwfPlayer.prototype = {
             allowFullScreen: true,
             wmode: 'transparent'
         };
+
+        if (!this.options.isRTMP) {
+            flashvars.src = this.options.src;
+        }
 
         var params = {
             allowScriptAccess: 'always',
@@ -135,7 +138,7 @@ SwfPlayer.prototype = {
         this.initEvents();
     },
 
-    track: function (track) {
+    track(track) {
         try {
             if ($.isFunction(track)) {
                 track();
@@ -150,7 +153,7 @@ SwfPlayer.prototype = {
         }
     },
 
-    applyPlayTrack: function() {
+    applyPlayTrack() {
         // 播放打点
         var track = this.playTrack;
         var self = this;
@@ -164,36 +167,36 @@ SwfPlayer.prototype = {
     /**
      * 绑定初始 ready 事件
      */
-    initEvents: function() {
-        /**
-         * 绑定事件
-         */
-        var cxt = this;
-        
-        this.on('ready', function() {
-            cxt.readyState = 'complete';
-            cxt.vidElem = document.getElementById(cxt.vid);
-            // cxt.options.volume && cxt.prop('volume', cxt.options.volume);
+    initEvents() {
+        this.on('ready', () => {
+            this.readyState = 'complete';
+            this.vidElem = document.getElementById(this.vid);
 
-            var readyCalls = cxt.readyCalls;
-            for (var i = 0, len = readyCalls.length; i < len; i++) {
-                readyCalls[i].call(cxt, cxt, cxt.vidElem);
+            var readyCalls = this.readyCalls;
+            for (var i = 0; i < readyCalls.length; i++) {
+                readyCalls[i].call(this, this, this.vidElem);
             }
-        }).on('stageclick', function() {
-            EMITTER.trigger('click_' + cxt.vid);
-        }).on('ended', function () {
-            if (cxt.options.loop) {
-                setTimeout(function () {
-                    cxt.replay();
+        });
+
+        this.on('stageclick', () => {
+            EMITTER.trigger('click_' + this.vid);
+        });
+
+        this.on('ended', () => {
+            if (this.options.loop) {
+                setTimeout(() => {
+                    this.replay();
                 }, 100);
             }
-        }).on('playing', function () {
+        });
+
+        this.on('playing', () => {
             // 用于首次播放时的打点
-            if (cxt.__not_first) {
+            if (this.__not_first) {
                 return;
             }
-            cxt.__not_first = true;
-            EMITTER.trigger('track_' + cxt.vid); 
+            this.__not_first = true;
+            EMITTER.trigger('track_' + this.vid);
         });
 
         this.applyPlayTrack();
@@ -202,7 +205,7 @@ SwfPlayer.prototype = {
     /**
      * onReady 添加回调
      */
-    ready: function(readyFunc) {
+    ready(readyFunc) {
         if (this.readyState === 'complete') {
             readyFunc.call(this, this, this.vidElem, this.$wrap);
         } else {
@@ -215,12 +218,12 @@ SwfPlayer.prototype = {
      * 设置视频源
      * @param {String} src 视频源路径
      */
-    setSource: function (src) {
+    setSource(src) {
         this.vidElem.vjs_src(src);
         return this;
     },
 
-    play: function() {
+    play() {
         // 防止出现问题
         // TODO: loop 时如何判定
         var dura = this.prop('duration');
@@ -236,346 +239,44 @@ SwfPlayer.prototype = {
         return this;
     },
 
-    pause: function() {
+    pause() {
         this.vidElem.vjs_pause();
         return this;
     },
 
-    /**
-     * 视频跳转
-     * @param  {Number} seconds 视频跳到指定秒数
-     */
-    seekTo: function(seconds) {
-        this.prop('currentTime', seconds);
-        return this;
-    },
-
-    replay: function () {
-        this.seekTo(0);
-        var self = this;
-        if (self.prop('paused')) {
-            self.play();
-        }
-        setTimeout(function () {
-            if (self.prop('paused')) {
-                self.play();
-            }
-
-            // 重新播放的时候，用于打点
-            EMITTER.trigger('track_' + self.vid);
-        }, 0);
-    },
-
-    prop: function(name, value) {
+    prop(name, value) {
         var elem = this.vidElem;
 
         if (arguments.length === 1) {
             return elem.vjs_getProperty(name);
         }
 
-        elem.vjs_setProperty(name, value);
-
-        return this;
-    }
-};
-
-function VideoPlayer() {
-    // 原型冒充
-    SwfPlayer.apply(this, arguments);
-} 
-
-var videoPlayProto = {
-    constructor: VideoPlayer,
-    addAttrs: function(obj) {
-        for (var key in obj){
-            if (obj.hasOwnProperty(key)) {
-                if (obj[key]) {
-                    this.vidElem[key] = obj[key];
-                }
-            }
-        }
-    },
-
-    /**
-     * 利用 swfobject.js 生成 flash 播放的 DOM 节点
-     */
-    createPlayer: function() {
-        this.mode = 'video';
-        this.$wrap.css('background-color', this.options.bgcolor);
-        this.$wrap.find('#' + this.vid).remove();
-        
-        var $elem = $('<video />');
-        this.vidElem = $elem[0];
-
-        this.addAttrs({
-            controls: false,
-            id: this.vid,
-            name: this.vid,
-            src: this.options.preload ? this.options.src : '',
-            preload: this.options.preload,
-            // loop 不应直接添加给 video 元素
-            // 否则 IE 11 下面监听不到事件
-            // loop: this.options.loop,
-            autoplay: this.options.autoplay,
-            muted: this.options.muted
-        });
-        
-        $elem.css({
-            width: '100%',
-            height: '100%'
-        });
-        this.$wrap.prepend($elem);
-        this.vidElem.volume = this.options.volume;
-        this._lastVolume = this.options.volume;
-
-        this.initEvents();
-    },
-
-    /**
-     * 绑定初始 ready 事件
-     */
-    initEvents: function() {
-        /**
-         * 绑定事件
-         */
-        var cxt = this;
-        this.on('ended', function () {
-            if (cxt.options.loop) {
-                setTimeout(function () {
-                    cxt.replay();
-                }, 100);
-            }
-        }).on('playing', function () {
-            // 用于首次播放时的打点
-            if (cxt.__not_first) {
-                return;
-            }
-            cxt.__not_first = true;
-            EMITTER.trigger('track_' + cxt.vid); 
-        });
-
-        this.applyPlayTrack();
-
-        var vid = this.vid;
-        var elem = document.getElementById(vid);
-        var events = [ 'canplaythrough', 'durationchange', 'playing', 'play', 'loadstart', 'pause', 'ended', 'volumechange', 'click' ];
-        $.each(events, function (i, name) {
-            $(elem).on(name, function (){
-                EMITTER.trigger(name + '_' + vid);
-            });
-        });
-
-        // ready....
-        var readyCalls = cxt.readyCalls;
-        var fn = null;
-
-        while (readyCalls.length) {
-            fn = readyCalls.shift();
-            fn.call(cxt, cxt, elem);
-        }
-
-        cxt.readyState = 'complete';
-    },
-
-    /**
-     * 设置视频源
-     * @param {String} src 视频源路径
-     */
-    setSource: function (src) {
-        this.prop('src', src);
-        return this;
-    },
-
-    play: function() {
-        // 不预加载的情况
-        if (!this.options.preload && !this.prop('currentSrc')) {
-            this.vidElem.src = this.options.src;
-        }
-        // 防止出现问题
-        // TODO: loop 时如何判定
-        var dura = this.prop('duration');
-        if (dura > 0 && dura <= this.prop('currentTime')) {
-            if (!this.options.loop) {
-                this.pause();
+        if (name === 'src') {
+            if (/^rtmp:\/\//.test(value)) {
+                var idx = value.split('?')[0].lastIndexOf('/');
+                elem.vjs_setProperty('rtmpConnection', value.slice(0, idx + 1));
+                elem.vjs_setProperty('rtmpStream', value.slice(idx + 1));
+                this.options.isRTMP = true;
             } else {
-                this.replay();
+                elem.vjs_setProperty(name, value);
+                this.options.isRTMP = false;
             }
         } else {
-            this.vidElem.play();
+            elem.vjs_setProperty(name, value);
         }
-        return this;
-    },
-
-    pause: function() {
-        this.vidElem.pause();
-        return this;
-    },
-
-    /**
-     * 视频跳转
-     * @param  {Number} seconds 视频跳到指定秒数
-     */
-    seekTo: function(seconds) {
-        this.vidElem.currentTime = seconds;
-        return this;
-    },
-
-    replay: function () {
-        // this.seekTo(0);
-        // if (this.prop('paused')) {
-        //     this.play();
-        // }
-        this.vidElem.currentTime = 0;
-        this.vidElem.play();
-        
-        var self = this;
-        setTimeout(function () {
-            if (self.prop('paused')) {
-                self.play();
-            }
-
-            // 重新播放的时候，用于打点
-            EMITTER.trigger('track_' + self.vid);
-        }, 0);
-    },
-
-    prop: function(name, value) {
-        var elem = this.vidElem;
-        if (arguments.length === 1) {
-            if (name == 'lastVolume') {
-                return this._lastVolume > 0 ? this._lastVolume : 1;
-            }
-            return elem[name];
-        }
-        
-        elem[name] = value;
-        // if (name === 'muted') {
-        //     elem['volume'] = Number(!value);
-        // } else if (name === 'volume' && value > 0) {
-        //     elem['muted'] = false;
-        // }
-
-        if (name === 'volume') {
-            this._lastVolume = elem.volume;
-        }
-
         return this;
     }
 };
 
-VideoPlayer.prototype = $.extend({}, SwfPlayer.prototype, videoPlayProto);
-
-var supportsMP4 = (function () {
-    var elem = document.createElement('video');
-    var res = '';
-    try {
-        res = elem.canPlayType && elem.canPlayType('video/mp4; codecs="avc1.42E01E"').replace(/^no$/, '');
-    } catch (e) {}
-    elem = null;
-    return !!res;
-}());
-
-var vPlayer = function (selector, options) {
+var vPlayer = module.exports = function (selector, options) {
     if (!options || !options.src) {
         throw 'option src needed!';
     }
 
-    var player;
-    // 指定为 swf
-    var forceSwf = options.mode === 'swf';
-    // 不是 mp4 类型(暂时忽略不常用的 ogg 等格式)
-    var typeUnfit = !/mp4$/i.test(options.src + '');
-    // 还有一种情况是浏览器压根不支持 video
-    if (!supportsMP4 || forceSwf || typeUnfit) {
-        player = new SwfPlayer(selector, options);
-        player.mode = 'swf';
-    } else {
-        player = new VideoPlayer(selector, options);
-        player.mode = 'video';
-        
-        player.$wrap.on('contextmenu', function (e) {
-            e.preventDefault();
-        });
-    }
-    
+    options.isRTMP = /^rtmp:\/\//.test(options.src);
+    var player = new SwfPlayer(selector, options);
+    player.mode = 'swf';
     return player;
-};
-
-module.exports = $.vPlayer = vPlayer;
-
-/**
- * 引入 jQuery 插件模式
- */
-$.fn.vPlayer = function () {
-    this.each(function (i, el) {
-        var $el = $(el);
-        var config = {};
-        config.mode = $el.attr('mode'); 
-        config.src  = $el.attr('src'); 
-        
-        var loop = $el.attr('loop');
-        if (loop !== void 0) {
-            config.loop = true;
-        }
-
-        // preload="auto" 需要与 autoplay="true" 一起使用 否则会出问题
-        // 这里的设置实际上是无效的
-        // 不过我打算先不管了
-        // 2016-11-21
-        var preload = $el.attr('preload');
-        if (preload !== void 0) {
-            config.preload = true;
-        }
-
-        var autoplay = $el.attr('autoplay');
-        if (autoplay !== void 0) {
-            config.autoplay = true;
-        }
-
-        var muted = $el.attr('muted');
-        if (muted !== void 0) {
-            config.muted = true;
-        }
-
-        var simulatefullscreen = $el.attr('simulatefullscreen');
-        if (simulatefullscreen !== void 0) {
-            config.simulateFullScreen = true;
-        }
-
-        var volume = $el.attr('volume');
-        if (volume !== void 0) {
-            config.volume = parseFloat(volume);
-        }
-
-        var poster = $el.attr('poster');
-        if (poster) {
-            config.poster = poster;
-        }
-
-        var href = $.trim($el.attr('href'));
-        if (href) {
-            config.clickUrl = href;
-        }
-
-        var onHrefOpen = $.trim($el.attr('onurlopen'));
-        if (onHrefOpen) {
-            config.clickUrlTrack = onHrefOpen;
-        }
-
-        var onPlay = $.trim($el.attr('onplay'));
-        if (onPlay) {
-            config.playTrack = onPlay;
-        }
-
-        var swfUrl = $.trim($el.attr('swf'));
-        if (swfUrl) {
-            config.swfUrl = swfUrl;
-        }
-
-        return $.vPlayer($el, config);
-    });
-
-    return this;
 };
 
 /**

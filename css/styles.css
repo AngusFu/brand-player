@@ -42,42 +42,6 @@
     _background-position: 0 -195px;
 }
 
-.video-control > .video-progress {
-    position: absolute;
-    left: 0;
-    right: 0;
-    z-index: 999;
-    top: 4px;
-    width: 100%;
-    height: 12px;
-    overflow: hidden;
-    zoom: 1;
-}
-    .video-progress .v-p-total {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 5px;
-        height: 2px;
-        width: 100%;
-        background-color: #555;
-    }
-        .video-progress .v-p-total .v-p-cur {
-            float: left;
-            height: 2px;
-            width: 0;
-            background-color: #2b2b2b;
-        }
-        .video-progress .v-p-total .v-p-ctrl {
-            position: absolute;
-            left: 0;
-            top: -5px;
-            width: 12px;
-            height: 12px;
-            background: url(__sprite) 0 -20px no-repeat;
-        }
-
-.video-time,
 .video-volume,
 .video-expand {
     float: right;
@@ -86,16 +50,6 @@
     float: left;
     overflow: hidden;
     padding: 8px 10px 7px 20px;
-}
-
-.video-time {
-    display: none;
-    float: left;
-    font-size: 12px;
-    color: #fff;
-    font-family: Microsoft Yahei;
-    padding: 0;
-    line-height: 30px;
 }
 
 .video-control-play-btn:hover,

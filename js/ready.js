@@ -1,8 +1,17 @@
 var screenfull = require('./screenfull');
-
+var pushSo = function (t) {
+    if (window.So) {
+        So.page.timers.push(t);
+    }
+};
 module.exports = function ready(player, elem) {
+    var playOpts = player.options;
     window['swf_' + elem.id] = player;
-    
+
+    if (playOpts.isRTMP) {
+        player.prop('src', playOpts.src);
+    }
+
     // 最外层
     var $document = $(document);
     var $playerWrap = player.$wrap;
@@ -25,17 +34,17 @@ module.exports = function ready(player, elem) {
 
             var left = $self.offset().left;
             var width = $self.width();
-            
+
             var calcPercent = function (e) {
                 var delataX = e.clientX - left;
                 delataX = delataX < 0 ? 0 : (delataX > width ? width : delataX);
 
                 var percent = delataX / $dur.width();
                 $cur.css('width', delataX);
-                $ctr.css('left', (width - $ctr.width()) * percent );
+                $ctr.css('left', (width - $ctr.width()) * percent);
                 return percent;
             };
-            
+
             var mousemove = 'mousemove.' + (+new Date());
             var update = function (e) {
                 if (option.onchange) {
@@ -48,26 +57,15 @@ module.exports = function ready(player, elem) {
                 $document.off(mousemove);
                 if (option.onend) {
                     option.onend(calcPercent(e));
-                } 
+                }
             });
             update(e);
         });
         return this;
     };
-
-    // 右键
-    // TODO 添加版权信息
-    // if (player.mode !== 'swf') {
-    //     $playerWrap.on('contextmenu', function () {
-    //         // console.log(e);
-    //     });
-    // }
-
     //-----------------------------------------------------------------------
     // 控制面板
     var $controlPane = _$('.video-control');
-    // 时间显示
-    var $progressTime = $playerWrap.find('.video-time');
 
     // 是否为静默状态
     var isSilent = function () {
@@ -86,6 +84,7 @@ module.exports = function ready(player, elem) {
             opacity: 1
         }, 300);
     };
+
     // 隐藏控件
     var hideControlPane = function () {
         // 暂停情况下 还是需要显示控件
@@ -104,109 +103,8 @@ module.exports = function ready(player, elem) {
         .on('mouseenter', showControlPane)
         .on('mouseleave', hideControlPane);
 
-    // 小容器下面的样式修正
-    // 目前主要做的是隐藏时间
-    var hideProgressTime = true;
-    var updateControlView = function () {
-        hideProgressTime = $controlPane.width() <= 250;
-        if (hideProgressTime) {
-            $progressTime.hide();
-        } else {
-            $progressTime.show();
-        }
-    };
-    updateControlView();
-
-    //--------------------------------------------------------------------------------------
-    // 播放进度相关
-    // 时间格式化
-    var leftPad = function (num) {
-        return '' + (num < 0 ? num : (num < 10 ? '0' + num : num));     
-    };
-    var format = function (seconds) {
-        seconds = Math.round(+seconds);
-        if (isNaN(seconds)) {
-            seconds = 0;
-        }
-        return leftPad(Math.floor(seconds / 60)) + ':' + leftPad(Math.floor(seconds % 60));
-    };
-    // 进度部分
-    var $progressWrap = _$('.video-progress');
-    // 总时长进度条
-    var $progressElem = _$('.v-p-total');
-    // 进度条
-    var $progressPassed = _$('.v-p-cur');
-    // 进度控制按钮
-    var $progressCircle = _$('.v-p-ctrl');
-    // 进度条总长度
-    var PROGRESS_TOTAL = $progressElem.width();
-
-    // window resize 或窗口形状变化时 更新进度条
-    var updateTimeline = function () {
-        // 更新总长度
-        PROGRESS_TOTAL = $progressElem.width();
-    };
-
-    // 更新进度显示
-    var IS_SLIDING = false;
-    var CIRCLE_WIDTH = 0;
-
-    var updateProgressUI = function () {
-        if (IS_SLIDING) {
-            return;
-        }
-
-        CIRCLE_WIDTH = CIRCLE_WIDTH || $progressCircle.width();
-
-        var currTime = player.prop('currentTime');
-        if (isNaN(currTime)) {
-            currTime = 0;
-        }
-
-        var duraTime  = player.prop('duration');
-        if (isNaN(duraTime) || duraTime <= 0) {
-            $progressTime.text('--:--');
-        } else {
-            $progressTime.text(format(currTime) + '/' + format(duraTime));
-        }
-
-        // 更新进度条样式
-        var percent = 0;
-        
-        if (duraTime !== 0) {
-            percent = currTime / duraTime;
-        }
-
-        percent = Math.round(percent * 100) / 100;
-        
-        $progressPassed.css('width', PROGRESS_TOTAL * percent);
-        $progressCircle.css('left',  (PROGRESS_TOTAL - CIRCLE_WIDTH) * percent);
-    };
-
-    $progressWrap.ctrlSlider({
-        duration: $progressElem, 
-        current: $progressPassed,
-        controller: $progressCircle,
-        onstart: function () {
-            IS_SLIDING = true;
-            player.pause();
-        },
-        onchange: function (percent) {
-            var dura = player.prop('duration');
-            percent = percent < 0.95 ? percent : 0.95;
-            player.seekTo(percent * dura);
-            $progressTime.text(format(dura * percent) + '/' + format(dura));
-        },
-        onend: function (percent) {
-            IS_SLIDING = false;
-            percent = percent < 0.95 ? percent : 0.95;
-            player.seekTo(percent * player.prop('duration'));
-            player.play();
-        }
-    });
-
     // -------------------------------------------------------------------
-    var $videoPlayBtn  = _$('.video-control-play');
+    var $videoPlayBtn = _$('.video-control-play');
     var $videoPlayIcon = _$('.video-control-play-btn');
     var CLASS_PLAYING = 'video-control-play-btn__playing';
 
@@ -216,89 +114,46 @@ module.exports = function ready(player, elem) {
     var $loading = _$('.vplayer-loading');
     var CLASS_PLAY_PAUSED = 'vplayer-play-pause';
     var timer = null;
-    
+
     $videoPlayBtn.on('click', function () {
         togglePlay();
     });
-    
-    $playBtn.on('click', function() {
+
+    $playBtn.on('click', function () {
         togglePlay();
         showControlPane();
     });
 
     // 开始加载
     player.on('loadstart', function () {
-        if (player.mode === 'video' && player.options.preload && !player.options.autoplay) {
-            return;
-        }
         $posterAndPlayBtn.hide();
         $loading.show();
     });
 
-    // 假如是直播
-    // 则 duration 会是 0
-    // 判断简单粗暴一点
-    player.on('durationchange', function () {
-        if (player.prop('duration') <= 0) {
-            $progressTime.hide();
-            $progressWrap.hide();
-        } else {
-            if (!hideProgressTime) {
-                $progressTime.show();
-            }
-            $progressWrap.show();
-        }
-    });
-
     // 可以播放
     player.on('canplaythrough', function () {
-        clearInterval(timer);
-        updateProgressUI();
         $videoPlayIcon.addClass(CLASS_PLAYING);
-
-        timer = setInterval(function() {
-            updateProgressUI();
-        }, 30);
-
         $posterAndPlayBtn.hide();
-        
-        setTimeout(function () {
-            $loading.hide();
-        }, 0);
+        $loading.hide();
     });
 
     player.on('playing', function () {
-        updateProgressUI();
         $videoPlayIcon.addClass(CLASS_PLAYING);
-        
-        clearInterval(timer);
-        timer = setInterval(function() {
-            updateProgressUI();
-        }, 30);
-
         $posterAndPlayBtn.hide();
     });
 
-    player.on('pause', function() {
-        clearInterval(timer);
-        updateProgressUI();
+    player.on('pause', function () {
         showControlPane();
-        // 停下来
         $videoPlayIcon.removeClass(CLASS_PLAYING);
         $playBtn.addClass(CLASS_PLAY_PAUSED).show();
     });
 
     // 结束后回到开头
     player.on('ended', function () {
-        clearInterval(timer);
-        updateProgressUI();
         hideControlPane();
-        // 非loop播放的情况下停下来
-        if (!player.options.loop) {
-            $videoPlayIcon.removeClass(CLASS_PLAYING);
-            $posterAndPlayBtn.show();
-            $playBtn.removeClass(CLASS_PLAY_PAUSED);
-        }
+        $videoPlayIcon.removeClass(CLASS_PLAYING);
+        $posterAndPlayBtn.show();
+        $playBtn.removeClass(CLASS_PLAY_PAUSED);
     });
 
 
@@ -312,7 +167,7 @@ module.exports = function ready(player, elem) {
         if (clickUrl && !isFullScreen()) {
             player.track(clickTrack);
             window.open(clickUrl);
-        } 
+        }
     };
     // 跳转打点
     $poster.on('click', openUrl);
@@ -329,7 +184,7 @@ module.exports = function ready(player, elem) {
     var $muteToggleBtn = _$('.video-volume-btn');
 
     _$('.video-volume-ctrl').ctrlSlider({
-        duration: $volumeFull, 
+        duration: $volumeFull,
         current: $volumeCurr,
         controller: $volumeCtrl,
         onstart: function () {},
@@ -353,13 +208,13 @@ module.exports = function ready(player, elem) {
         var isMuted = player.prop('muted');
         var className = 'video-volume-btn__' + (
             (volume === 0 || isMuted) ? 'muted' : (
-                (volume <  1/3) ? 1 : ((volume < 2/3) ? 2 : 3)
+                (volume < 1 / 3) ? 1 : ((volume < 2 / 3) ? 2 : 3)
             )
         );
-        
+
         btn.className = btn.className.replace(/video-volume-btn__(\d|muted)/g, '') + className;
     };
-    
+
     var updateVolumeUI = function () {
         setVolumeUI(player.prop('muted') ? 0 : player.prop('volume'));
     };
@@ -371,16 +226,10 @@ module.exports = function ready(player, elem) {
         if (volume < 0.01 && volume > 0) {
             player.prop('volume', 0);
         }
-        
+
         // 静音状态则 UI 归零
         if (player.prop('muted')) {
             volume = 0;
-        } else {
-            // 非静音状态 但 volume 为 0
-            // if (player.prop('volume') === 0) {
-            //     player.prop('volume', 1);
-            //     return;
-            // }
         }
         setVolumeUI(volume);
     });
@@ -391,10 +240,10 @@ module.exports = function ready(player, elem) {
 
     //-----------------------------------------------------------------------
     // 全屏切换
-    var $expandBtn  = _$('.video-expand');
+    var $expandBtn = _$('.video-expand');
     var $expandIcon = _$('.video-expand-btn');
     var CLASS_FULL_SCREEN = 'video-wrapper__fullscreen';
-    var CLASS_BTN_EXPAND  = 'video-expand-btn__expanded';
+    var CLASS_BTN_EXPAND = 'video-expand-btn__expanded';
     var CLASS__FULL_SCREEN_IDENT = 'isFullScreen';
 
     var $rootBody = $('html, body');
@@ -413,14 +262,10 @@ module.exports = function ready(player, elem) {
         }
         $expandIcon.toggleClass(CLASS_BTN_EXPAND);
         $playerWrap.toggleClass(CLASS__FULL_SCREEN_IDENT);
-
-        updateControlView();
-        updateTimeline();
         updateVolumeUI();
-        updateProgressUI();
     };
 
-    if (!screenfull && !player.options.simulateFullScreen) {
+    if (!screenfull && !playOpts.simulateFullScreen) {
         $expandIcon.hide();
     } else {
         $expandBtn.on('click', toggleFullScreen);
@@ -439,34 +284,10 @@ module.exports = function ready(player, elem) {
             } else {
                 $rootBody.addClass(CLASS_BODY_HIDDEN);
             }
-            
-            updateControlView();
-            updateTimeline();
             updateVolumeUI();
-            updateProgressUI();
         });
     }
 
-    //-----------------------------------------------------------------------
-    // 双击全屏切换支持
-    // var lastClick = 0;
-    // var timeout = null;
-    // player.on('click', function () {
-    //     clearTimeout(timeout);
-    //     if (+new Date() - lastClick < 300) {
-    //         toggleFullScreen();
-    //         lastClick = 0;
-    //     } else {
-
-    //         lastClick = +new Date();
-    //         timeout = setTimeout(function () {
-    //             lastClick = 0;
-    //             togglePlay();
-    //         }, 300);
-    //     }
-    // });
-
-    // incr : [0, 1]
     function increaseVolumeBy(incr) {
         var vol = player.prop('volume');
         var res = vol + incr;
@@ -479,45 +300,8 @@ module.exports = function ready(player, elem) {
         player.prop('volume', res);
     }
 
-    // TODO: 暂时不支持键盘快进
-    // 进度百分比
-    // incr: [0, 1]
-    function seekByDecimal(incr) {
-        if (player.mode === 'swf') {
-            return;
-        }
-        var dura = player.prop('duration');
-
-        // duration 为 0
-        // 或者已经播放结束且在快进时
-        // 禁止
-        if (!dura || player.prop('ended') && incr > 0) {
-            return;
-        }
-
-        var cur = player.prop('currentTime') / dura;
-        var res = cur + incr;
-
-        res = res < 0 ? 0 : (res > 1 ? 1 : res);
-        player.seekTo(dura * res);
-
-        if (res === 1) {
-            if (player.options.loop) {
-                player.replay();
-            } else {
-                player.pause();
-            }
-        } else {
-            player.play();
-        }
-    }
-
     function handleArrowKeyPress(key) {
         switch (+key) {
-            case 37: // ←
-                return seekByDecimal(-0.1);
-            case 39: // →
-                return seekByDecimal(+0.1);
             case 38: // ↑
                 return increaseVolumeBy(+0.1);
             case 40: // ↓
@@ -531,12 +315,12 @@ module.exports = function ready(player, elem) {
     // 空格(32) 暂停
     $document.on('keydown.vjs', function (e) {
         // 非全屏状态 不管
-        if(!isFullScreen()) {
+        if (!isFullScreen()) {
             return;
         }
 
         var key = +e.keyCode;
-        if(key === 116) {
+        if (key === 116) {
             location.reload();
         } else if (key === 27) {
             toggleFullScreen();
@@ -574,19 +358,10 @@ module.exports = function ready(player, elem) {
         }
     }).on('selectstart', function (e) {
         e.preventDefault();
-    }); 
+    });
 
     // 窗口尺寸变化时
-    $(window).on('resize', throttle(function () {
-        updateControlView();
-        updateTimeline();
-        updateVolumeUI();
-        // 已经停止或已经放完之后 需要手动更新
-        // 播放时只更新 PROGRESS_TOTAL 就足够
-        if (player.prop('ended') || player.prop('paused')) {
-            updateProgressUI();
-        }
-    }, 100));
+    $(window).on('resize', throttle(updateVolumeUI, 100));
 
     //-----------------------------------------------------------------------
     /**
@@ -598,7 +373,7 @@ module.exports = function ready(player, elem) {
         if (player.prop('ended')) {
             return player.replay();
         }
-        
+
         if (player.prop('paused')) {
             return player.play();
         }
@@ -610,20 +385,20 @@ module.exports = function ready(player, elem) {
         return $playerWrap.hasClass(CLASS__FULL_SCREEN_IDENT);
     }
 
-    function throttle(fn,delay, immediate, debounce) {
-        var curr = +new Date(),//当前事件
+    function throttle(fn, delay, immediate, debounce) {
+        var curr = +new Date(), //当前事件
             last_call = 0,
             last_exec = 0,
             timer = null,
             diff, //时间差
-            context,//上下文
+            context, //上下文
             args,
             exec = function () {
                 last_exec = curr;
                 fn.apply(context, args);
             };
         return function () {
-            curr= +new Date();
+            curr = +new Date();
             context = this;
             args = arguments;
             diff = curr - (debounce ? last_call : last_exec) - delay;
@@ -641,8 +416,9 @@ module.exports = function ready(player, elem) {
                     timer = setTimeout(exec, -diff);
                 }
             }
+
+            timer && pushSo(timer);
             last_call = curr;
         };
     }
 };
-
