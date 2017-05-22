@@ -1,7 +1,7 @@
 var screenfull = require('./screenfull');
 var pushSo = function (t) {
-    if (window.So) {
-        So.page.timers.push(t);
+    if (window.So && window.So.page) {
+        window.So.page.timers.push(t);
     }
 };
 module.exports = function ready(player, elem) {
@@ -113,7 +113,6 @@ module.exports = function ready(player, elem) {
     var $poster = _$('.vplayer-poster');
     var $loading = _$('.vplayer-loading');
     var CLASS_PLAY_PAUSED = 'vplayer-play-pause';
-    var timer = null;
 
     $videoPlayBtn.on('click', function () {
         togglePlay();
@@ -417,7 +416,9 @@ module.exports = function ready(player, elem) {
                 }
             }
 
-            timer && pushSo(timer);
+            if (timer) {
+                pushSo(timer);
+            }
             last_call = curr;
         };
     }
