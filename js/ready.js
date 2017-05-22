@@ -1,4 +1,5 @@
 var screenfull = require('./screenfull');
+var timers = require('./timers');
 
 module.exports = function ready(player, elem) {
     window['swf_' + elem.id] = player;

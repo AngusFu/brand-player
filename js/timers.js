@@ -1,2 +1,2 @@
 const w = window;
-module.exports = w.So && So.page && So.page.timer || [];
+module.exports = w.So && w.So.page && w.So.page.timer || [];
