@@ -1478,6 +1478,12 @@ var ready = function ready(player, elem) {
         updateProgressUI();
     };
 
+	player.exitFullscreen = function () {
+	    if (isFullScreen()) {
+		    toggleFullScreen();
+		}
+	};
+
     if (!screenfull && !player.options.simulateFullScreen) {
         $expandIcon.hide();
     } else {

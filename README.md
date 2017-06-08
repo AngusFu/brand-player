@@ -17,11 +17,6 @@ There are some rules you should follow when customizing.
 - Avoid keywords, e.g. `default``catch`
 - Take care when importing third-party packages
  
-## CDN
-
-- RTMP: https://s2.ssl.qhres.com/!d889e722/player/rtmp.js
-- MP4:  https://s5.ssl.qhres.com/!d889e722/player/mp4.js
-
 ## Usage
 
 ```javascript
@@ -95,6 +90,9 @@ vplayer.ready(function (
   // ...
   playerInstance.play();
   playerInstance.pause();
+
+  // exit fulllscreen
+  playerInstance.exitFullscreen();
 });
 
 // every time one event called
