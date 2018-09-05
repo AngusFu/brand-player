@@ -1,7 +1,5 @@
 # Brand Player
 
-[中文](./README_ZH.md)
-
 ## Features
 
 - IE7 Compitable
@@ -14,7 +12,7 @@
 There are some rules you should follow when customizing.
 
 - Use ES3
-- Avoid keywords, e.g. `default``catch`
+- Avoid keywords, e.g. `default` `catch`
 - Take care when importing third-party packages
  
 ## Usage
@@ -52,54 +50,50 @@ var vplayer = $.vPlayer("#container", {
     simulateFullScreen: false
 });
 
-vplayer.ready(function (
-  playerInstance,
-  videoElem,
-  $wrapperElem
-) {
+vplayer.ready(function (player, videoElem, $wrapperElem) {
   // control DOM: hide control bar
   $wrapperElem.find('.video-control').hide();
 
-  // bind/unbind events for playerInstance
+  // bind/unbind events for player
   // 1. unbind all click events on the stage
-  playerInstance.off('click');
+  player.off('click');
   // 2. bind events
   // stage click
-  playerInstance.on('click', fnClick);
+  player.on('click', fnClick);
   // pause
-  playerInstance.on('pause', fnPause);
+  player.on('pause', fnPause);
   // start to play
-  playerInstance.on('playing', fnPlaying);
+  player.on('playing', fnPlaying);
   // ended
-  playerInstance.on('ended', fnEnded);
+  player.on('ended', fnEnded);
   // ...
 
 
   // GET properties
   // Note: property names are like that of HTML5-video
-  playerInstance.prop('duration');
-  playerInstance.prop('muted');
+  player.prop('duration');
+  player.prop('muted');
   // ...
   
   // SET properties
-  playerInstance.prop('volume', 0.5);
-  playerInstance.prop('muted', true);
+  player.prop('volume', 0.5);
+  player.prop('muted', true);
   // ...
 
   // control functions
   // ...
-  playerInstance.play();
-  playerInstance.pause();
+  player.play();
+  player.pause();
 
   // exit fulllscreen
-  playerInstance.exitFullscreen();
+  player.exitFullscreen();
 });
 
 // every time one event called
 // the event name will be shown in console
 window.vPlayer.toggleEventLog();
 
-// this will return a playerInstance
+// this will return a player
 // while `vjs_1484186882609` is id of video element
 window.vPlayer.debug('vjs_1484186882609');
 
