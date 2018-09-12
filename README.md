@@ -1,5 +1,9 @@
 # Brand Player
 
+> No longer maintained.
+
+> For hot fix issue with Chrome 67+ with fullscreen API, just use [fix.js](./fix.js).
+
 ## Features
 
 - IE7 Compitable
